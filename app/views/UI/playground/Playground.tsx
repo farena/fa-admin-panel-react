@@ -7,6 +7,7 @@ import FormDropdownPlayground from "./_FormDropdownPlayground";
 import FormComboboxPlayground from "./_FormComboboxPlayground";
 import CalendarPlayground from "./_CalendarPlayground";
 import FormButtonPlayground from "./_FormButtonPlayground";
+import FormSelectPlayground from "./_FormSelectPlayground";
 
 export default function Playground() {
   return (
@@ -25,6 +26,7 @@ export default function Playground() {
       <FormComboboxPlayground />
       <CalendarPlayground />
       <FormButtonPlayground />
+      <FormSelectPlayground />
     </div>
   );
 }
