@@ -1,0 +1,45 @@
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.modal-pos-top-enter-active,
+.modal-pos-top-leave-active,
+.modal-pos-center-enter-active,
+.modal-pos-center-leave-active,
+.modal-pos-bottom-enter-active,
+.modal-pos-bottom-leave-active,
+.modal-pos-left-enter-active,
+.modal-pos-left-leave-active,
+.modal-pos-right-enter-active,
+.modal-pos-right-leave-active {
+  transition: 0.5s ease;
+}
+.modal-pos-top-enter-from,
+.modal-pos-top-leave-to {
+  transform: translateY(-150px);
+  opacity: 0;
+}
+.modal-pos-bottom-enter-from,
+.modal-pos-bottom-leave-to {
+  transform: translateY(150px);
+  opacity: 0;
+}
+.modal-pos-left-enter-from,
+.modal-pos-left-leave-to {
+  transform: translateX(-100%);
+}
+.modal-pos-right-enter-from,
+.modal-pos-right-leave-to {
+  transform: translateX(100%);
+}
+
+.modal-pos-center-enter-from,
+.modal-pos-center-leave-to {
+  transform: translateY(-100%);
+  opacity: 0;
+}

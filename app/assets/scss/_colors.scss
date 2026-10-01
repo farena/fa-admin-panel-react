@@ -1,0 +1,122 @@
+@each $color, $value in $custom-theme-colors {
+  .text-#{$color} {
+    color: $value !important;
+  }
+  a.link-#{$color} {
+    color: $value !important;
+
+    &:hover {
+      color: colorLightness(#{$color}, -0.3) !important;
+    }
+  }
+  .bg-#{$color} {
+    background-color: $value !important;
+    color: var(--color-#{$color}-text);
+  }
+  .badge.badge-#{$color} {
+    background-color: $value !important;
+    color: var(--color-#{$color}-text);
+  }
+  .tabs.tabs-#{$color} {
+    .tabs-nav {
+      background-color: colorLightness($value, 0.4);
+      color: var(--color-#{$color}-text);
+
+      > .btn.active {
+        color: $value;
+      }
+    }
+    &.tabs-underlined {
+      .tabs-nav {
+        border-color: $value;
+
+        > .btn {
+          color: var(--color-dark);
+
+          &.active {
+            color: $value;
+            border-color: $value;
+          }
+        }
+      }
+    }
+  }
+  .bg-hover-#{$color}:hover {
+    transition: 0.25s ease-in-out;
+    background-color: $value !important;
+  }
+  .card.card-#{$color} {
+    background-color: $value;
+    color: var(--color-#{$color}-text);
+  }
+  .btn.btn-#{$color} {
+    border: 1px solid #{$value};
+    background-color: $value;
+    color: var(--color-#{$color}-text);
+    transition: 0.5s ease;
+
+    &:not(:disabled),
+    &:not(.disabled) {
+      &:hover {
+        background-color: colorLightness(#{$color}, -0.25) !important;
+        transition: 0.5s ease;
+      }
+    }
+  }
+  .alert.alert-#{$color} {
+    color: colorLightness($value, -0.1);
+    border-color: colorLightness($value, -0.1);
+    background-color: colorLightness($value, 0.75);
+  }
+
+  .btn.btn-outline-#{$color} {
+    background-color: transparent;
+    border: 1px solid #{$value};
+    color: #{$value};
+    transition: 0.5s ease;
+
+    &:not(:disabled),
+    &:not(.disabled) {
+      &:hover {
+        transition: 0.5s ease;
+        border: 1px solid transparent;
+        color: var(--color-#{$color}-text);
+        background-color: colorLightness(#{$color}, -0.25) !important;
+      }
+    }
+  }
+
+  .btn.btn-borderless-#{$color} {
+    background-color: transparent;
+    color: #{$value};
+    transition: 0.5s ease;
+
+    &:not(:disabled),
+    &:not(.disabled) {
+      &:hover {
+        transition: 0.5s ease;
+        background-color: var(--color-#{$color});
+        color: var(--color-#{$color}-text);
+      }
+    }
+  }
+
+  .topbar.topbar-#{$color} {
+    .lang-bar {
+      background-color: var(--color-#{$color}-shade);
+    }
+    .navbar {
+      background-color: var(--color-#{$color});
+
+      li > ul {
+        background-color: var(--color-#{$color}-shade);
+      }
+    }
+  }
+
+  .swiper.swiper-#{$color} {
+    --swiper-theme-color: #{$value};
+    --swiper-pagination-bullet-inactive-color: white;
+    --swiper-pagination-bullet-inactive-opacity: 0.5;
+  }
+}

@@ -1,0 +1,51 @@
+.draggable-list-wrapper {
+  position: relative;
+
+  .draggable-list {
+    display: grid;
+    gap: 0.25em;
+    min-height: 52px;
+    padding: 5px;
+    border-radius: var(--radius);
+    background: var(--color-light-shade);
+
+    .drag-list-item {
+      background: var(--color-light);
+      border-radius: var(--radius);
+      display: grid;
+      grid-template-columns: auto 1fr;
+
+      .drag-handle {
+        padding: 0.5em;
+        display: grid;
+        place-items: center;
+        cursor: grab;
+      }
+      .list-item-content {
+        padding: 0.5em;
+      }
+
+      &:hover {
+        background: var(--color-white);
+      }
+
+      &-disabled {
+        grid-template-columns: 1fr;
+
+        .drag-handle {
+          display: none;
+        }
+      }
+    }
+  }
+
+  .default-message {
+    text-align: center;
+    background: var(--color-light);
+    font-size: 0.8em;
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+  }
+}

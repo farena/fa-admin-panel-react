@@ -1,0 +1,245 @@
+.card {
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  -webkit-box-shadow: var(--shadow);
+  -moz-box-shadow: var(--shadow);
+  position: relative;
+
+  &.no-shadow {
+    box-shadow: unset;
+    -webkit-box-shadow: unset;
+    -moz-box-shadow: unset;
+  }
+
+  .card-header {
+    padding: 0.5em;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .card-img {
+    background-image: url('http://via.placeholder.com/400');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: block;
+    position: relative;
+    min-height: 150px;
+  }
+  .card-body {
+    padding: 0.5em 1em;
+  }
+  .card-footer {
+    padding: 0.5em 1em;
+  }
+}
+
+.card.room_card {
+  .card-imgs {
+    overflow: hidden;
+  }
+
+  .card-img {
+    background-image: url('/img/default-image.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: block;
+    position: relative;
+    min-height: 200px;
+  }
+
+  .card-body {
+    > p {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      min-height: 65px;
+    }
+
+    table.table tr:first-child td {
+      border-top: unset;
+    }
+  }
+}
+
+.card.widget {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 1.5em);
+
+  .card-header {
+    background: #fff;
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+    align-items: center;
+    display: flex;
+    padding: 0.75em 1em;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
+    .widget-icon {
+      display: block;
+      margin-right: 1em;
+    }
+    h3 {
+      font-size: 1.25em;
+      margin: 0;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 0.5em;
+      margin-left: auto;
+
+      .btn {
+        font-size: 0.9em;
+        white-space: nowrap;
+      }
+    }
+
+    .widget-desc {
+      align-self: flex-end;
+      margin-left: 1em;
+    }
+  }
+  .card-body {
+    flex-grow: 1;
+
+    .widget-loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      min-height: 200px;
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.05);
+      animation: pulse 3s infinite;
+      margin: 1em 0;
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.5;
+        }
+        75% {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  &.widget-plain {
+    background: transparent;
+    box-shadow: unset;
+    -webkit-box-shadow: unset;
+    -moz-box-shadow: unset;
+
+    .card-header,
+    .card-body {
+      background: transparent;
+      border: unset;
+    }
+    .card-header {
+      padding-bottom: 0;
+      padding-top: 0;
+    }
+  }
+}
+
+.counter-widget {
+  display: grid;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 1em;
+  gap: 0.25em;
+
+  h6,
+  h3 {
+    margin: 0;
+  }
+  h6 {
+    font-weight: 400;
+  }
+
+  @media (min-width: 512px) and (max-width: 768px) {
+    h6 {
+      font-size: 0.9em;
+    }
+    h3 {
+      font-size: 1.5em;
+    }
+  }
+
+  .counter-widget-body {
+    display: flex;
+    gap: 0.75em;
+    justify-content: space-between;
+
+    > div:first-child {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25em;
+    }
+  }
+}
+
+.swiper {
+  overflow: visible !important;
+
+  .swiper-pagination {
+    // bottom: var(--pagination-bottom, -20px) !important;
+  }
+}
+
+.tooltip {
+  position: absolute;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.75);
+  border-radius: var(--radius);
+  padding: 5px 10px;
+  font-weight: 600;
+  font-size: 1em;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: 0.25s ease;
+  z-index: 100;
+  opacity: 0;
+  transform-origin: center center;
+  transition: 0.25s ease-in-out;
+
+  top: 50%;
+  left: calc(100% + 5px);
+  transform: translateY(-50%);
+
+  &.left {
+    left: unset;
+    top: 50%;
+    right: calc(100% + 5px);
+    transform: translateY(-50%);
+  }
+
+  &.right {
+    top: 50%;
+    left: calc(100% + 5px);
+    transform: translateY(-50%);
+  }
+
+  &.top {
+    left: 50%;
+    top: unset;
+    bottom: calc(100% + 5px);
+    transform: translateX(-50%);
+  }
+
+  &.bottom {
+    left: 50%;
+    bottom: unset;
+    top: calc(100% + 5px);
+    transform: translateX(-50%);
+  }
+}
+
+*:hover > .tooltip {
+  opacity: 1;
+}

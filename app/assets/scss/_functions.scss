@@ -1,0 +1,42 @@
+// Function to get the color from the map or return the value if it is a valid color
+@function getColor($color) {
+  // Check if $color is a key in the map
+  @if map-has-key($custom-theme-colors, $color) {
+    $color: map-get($custom-theme-colors, $color);
+  }
+
+  // Ensure $color is a valid color
+  @if type-of($color) != 'color' {
+    @error "'#{$color}' is not a valid color or does not exist in the color map.";
+  }
+
+  @return $color;
+}
+
+// Function to adjust the opacity of a color
+@function colorOpacity($color, $opacity: 1) {
+  // Get the color value
+  $color: getColor($color);
+
+  // Ensure opacity is between 0 and 1
+  @if $opacity < 0 or $opacity > 1 {
+    @warn "Opacity should be between 0 and 1. It will be adjusted automatically.";
+    $opacity: clamp(0, $opacity, 1);
+  }
+
+  // Convert color to rgba with the desired opacity
+  @return rgba($color, $opacity);
+}
+
+// Function to adjust the lightness of a color
+@function colorLightness($color, $darkness: 1) {
+  // Get the color value
+  $color: getColor($color);
+
+  // Adjust the lightness of the color
+  @if $darkness < 0 {
+    @return mix(black, $color, abs($darkness) * 100%);
+  } @else {
+    @return mix(white, $color, $darkness * 100%);
+  }
+}

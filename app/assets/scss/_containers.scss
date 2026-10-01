@@ -1,0 +1,41 @@
+.img-container {
+  min-width: 100px;
+  min-height: 100px;
+  background-image: url('http://via.placeholder.com/400');
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: block;
+  position: relative;
+
+  &.img-container-circle {
+    aspect-ratio: 1;
+    border-radius: 50%;
+  }
+  &.img-container-rounded {
+    border-radius: 1.5em;
+  }
+
+  &.contain {
+    background-size: contain;
+  }
+
+  .img-buttons {
+    background: rgba(0, 0, 0, 0.7);
+    position: absolute;
+    display: grid;
+    place-items: center;
+    inset: 0;
+    opacity: 0;
+    transition: 0.5s ease;
+  }
+  &:hover .img-buttons {
+    opacity: 1;
+    transition: 0.5s ease;
+  }
+
+  &.img-container-md {
+    min-width: 200px;
+    min-height: 200px;
+  }
+}

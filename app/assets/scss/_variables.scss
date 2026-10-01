@@ -1,0 +1,99 @@
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css");
+
+$custom-theme-colors: () !default;
+$custom-theme-colors: map-merge(
+  (
+    "primary": #ff9928,
+    "primary-text": #fff,
+    "primary-tint": #ffb35d,
+    "primary-shade": #d37810,
+    "primary-75": #ff992875,
+    "primary-50": #ff992850,
+    "primary-25": #ff992825,
+
+    "secondary-tint": #9860ff,
+    "secondary": #813dff,
+    "secondary-text": #fff,
+    "secondary-shade": #673fb1,
+    "secondary-75": #813dff75,
+    "secondary-50": #813dff50,
+    "secondary-25": #813dff25,
+
+    "transparent": transparent,
+    "transparent-text": #697a8d,
+
+    "white": #ffffff,
+    "white-shade": #d8d6d6,
+    "white-text": #010101,
+
+    "light": #fafafa,
+    "light-text": #000,
+    "light-shade": #f3f3f3,
+
+    "medium-tint": #c2c7cc,
+    "medium": #bbc0c5,
+    "medium-text": #fff,
+    "medium-shade": #5a646e,
+
+    "dark-tint": #373737,
+    "dark": #646464,
+    "dark-text": #fff,
+    "dark-shade": #3d3d3d,
+
+    "danger": #e14319,
+    "danger-shade": #be3813,
+    "danger-text": #fff,
+
+    "success": #6abb45,
+    "success-shade": #5da53c,
+    "success-text": #fff,
+
+    "info": #7ad7e4,
+    "info-shade": #68bac5,
+    "info-text": #fff,
+
+    "warning": #ffba3b,
+    "warning-shade": #ebaa33,
+    "warning-text": #fff,
+  ),
+  $custom-theme-colors
+);
+
+$custom-sizes: () !default;
+$custom-sizes: map-merge(
+  (
+    0: 0,
+    1: 0.25rem,
+    2: 0.5rem,
+    3: 1rem,
+    4: 1.5rem,
+    5: 3rem,
+    6: 4.5rem,
+    7: 6rem,
+  ),
+  $custom-sizes
+);
+
+:root {
+  --font-family: "Lexend", sans-serif;
+  --font-size: 14px;
+  --radius: 0.25em;
+
+  @each $color, $value in $custom-theme-colors {
+    --color-#{$color}: #{$value};
+  }
+
+  --body-bg: var(--color-light);
+  --body-text: var(--color-dark);
+  --shadow: 0 0 10px 0 rgb(67 89 113 / 12%);
+
+  --sidebar-closed-width: calc(40px + 2em);
+  --sidebar-open-width: 250px;
+  --topbar-height: 72px;
+
+  // Menciones del editor. Son los mismos valores con los que se guardo el
+  // contenido que ya esta en la base: cambiarlos cambia como se ve.
+  --fa-color-mention-background: hsla(341, 100%, 30%, 0.1);
+  --fa-color-mention-text: hsl(341, 100%, 30%);
+}
