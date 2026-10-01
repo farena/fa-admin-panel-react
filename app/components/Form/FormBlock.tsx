@@ -1,4 +1,4 @@
-import { useId, type InputHTMLAttributes, type ReactNode } from "react";
+import { type InputHTMLAttributes, type ReactNode } from "react";
 import { useClassParser } from "~/hooks/useClassParser";
 
 type FormBlockProps = Omit<
@@ -13,7 +13,8 @@ type FormBlockProps = Omit<
   children: ReactNode;
 };
 
-export default function FormText({
+export default function FormBlock({
+  id,
   label,
   icon,
   disabled = false,
@@ -21,8 +22,6 @@ export default function FormText({
   errors,
   children,
 }: FormBlockProps) {
-  const id = useId();
-
   return (
     <div
       className={useClassParser({

@@ -3,7 +3,7 @@ import { useClassParser } from "~/hooks/useClassParser";
 
 type FormCheckboxProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
-  "onChange"
+  "onChange" | "value"
 > & {
   label?: string;
   value: boolean;
@@ -12,7 +12,7 @@ type FormCheckboxProps = Omit<
   onChange: (val: boolean) => void;
 };
 
-export default function FormText({
+export default function FormCheckbox({
   label,
   value,
   disabled = false,
@@ -34,6 +34,7 @@ export default function FormText({
         type="checkbox"
         id={id}
         checked={value}
+        disabled={disabled}
         onChange={(e) => onChange(e.target.checked)}
       />
       {label && <label htmlFor={id}>{label}</label>}

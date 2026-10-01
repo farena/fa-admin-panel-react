@@ -2,6 +2,7 @@ import {
   isRouteErrorResponse,
   Links,
   Meta,
+  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -28,6 +29,14 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+const DEV_ROUTES = [
+  { label: "Playground", to: "/" },
+  { label: "Login", to: "/login" },
+  { label: "Forgot password", to: "/forgot_password" },
+  { label: "Reset password", to: "/reset_password/test-token" },
+  { label: "Activate user", to: "/activate_user/test-token" },
+];
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -38,6 +47,26 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
+        {/* Routes to playground or to dashboard templates */}
+
+        <nav className="nav bg-primary border-bottom py-1">
+          <div className="container">
+            <div className="d-flex justify-content-between">
+              {DEV_ROUTES.map((route) => (
+                <NavLink
+                  key={route.to}
+                  to={route.to}
+                  end
+                  className={({ isActive }) =>
+                    `nav-link text-white${isActive ? " font-weight-bold" : ""}`
+                  }
+                >
+                  {route.label}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        </nav>
         {children}
         <ScrollRestoration />
         <Scripts />
