@@ -9,6 +9,7 @@ import CalendarPlayground from "./_CalendarPlayground";
 import FormButtonPlayground from "./_FormButtonPlayground";
 import FormSelectPlayground from "./_FormSelectPlayground";
 import FormBooleanPlayground from "./_FormBooleanPlayground";
+import FormLinkPlayground from "./_FormLinkPlayground";
 
 export default function Playground() {
   return (
@@ -29,6 +30,7 @@ export default function Playground() {
       <FormButtonPlayground />
       <FormSelectPlayground />
       <FormBooleanPlayground />
+      <FormLinkPlayground />
     </div>
   );
 }
