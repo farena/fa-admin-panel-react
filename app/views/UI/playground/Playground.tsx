@@ -13,6 +13,7 @@ import FormLinkPlayground from "./_FormLinkPlayground";
 import FormTimePlayground from "./_FormTimePlayground";
 import FormWeeklyDatePlayground from "./_FormWeeklyDatePlayground";
 import FormDatePlayground from "./_FormDatePlayground";
+import ToastPlayground from "./_ToastPlayground";
 
 export default function Playground() {
   return (
@@ -37,6 +38,7 @@ export default function Playground() {
       <FormTimePlayground />
       <FormWeeklyDatePlayground />
       <FormDatePlayground />
+      <ToastPlayground />
     </div>
   );
 }

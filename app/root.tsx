@@ -10,6 +10,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./assets/scss/styles.scss";
+import ToastProvider from "./components/Toast/ToastProvider";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: "/favicon.ico" },
@@ -76,7 +77,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <ToastProvider>
+      <Outlet />
+    </ToastProvider>
+  );
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
