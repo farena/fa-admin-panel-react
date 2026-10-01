@@ -68,6 +68,7 @@ export default function FormText({
           <input
             id={id}
             type={password ? "password" : "text"}
+            placeholder={placeholder}
             value={value}
             onChange={(e) => onChange(e.target.value)}
             {...props}
