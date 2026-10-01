@@ -11,6 +11,7 @@ import FormSelectPlayground from "./_FormSelectPlayground";
 import FormBooleanPlayground from "./_FormBooleanPlayground";
 import FormLinkPlayground from "./_FormLinkPlayground";
 import FormTimePlayground from "./_FormTimePlayground";
+import FormWeeklyDatePlayground from "./_FormWeeklyDatePlayground";
 
 export default function Playground() {
   return (
@@ -33,6 +34,7 @@ export default function Playground() {
       <FormBooleanPlayground />
       <FormLinkPlayground />
       <FormTimePlayground />
+      <FormWeeklyDatePlayground />
     </div>
   );
 }
