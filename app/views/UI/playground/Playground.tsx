@@ -10,6 +10,7 @@ import FormButtonPlayground from "./_FormButtonPlayground";
 import FormSelectPlayground from "./_FormSelectPlayground";
 import FormBooleanPlayground from "./_FormBooleanPlayground";
 import FormLinkPlayground from "./_FormLinkPlayground";
+import FormTimePlayground from "./_FormTimePlayground";
 
 export default function Playground() {
   return (
@@ -31,6 +32,7 @@ export default function Playground() {
       <FormSelectPlayground />
       <FormBooleanPlayground />
       <FormLinkPlayground />
+      <FormTimePlayground />
     </div>
   );
 }
