@@ -31,7 +31,7 @@ export default function DashboardLayout() {
         <div className="content-wrapper">
           <div className="content">{!loading && <Outlet />}</div>
           <div className="footer">
-            Copyright &reg; {fullYear} - DoorMate - All rights reserved
+            Copyright &reg; {fullYear} - Quartz - All rights reserved
           </div>
         </div>
       </div>
