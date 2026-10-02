@@ -20,6 +20,7 @@ import FormCommentPlayground from "./_FormCommentPlayground";
 import FormCodePlayground from "./_FormCodePlayground";
 import FormImageCropperPlayground from "./_FormImageCropperPlayground";
 import FormColorpickerPlayground from "./_FormColorpickerPlayground";
+import TabsPlayground from "./_TabsPlayground";
 
 export default function Playground() {
   return (
@@ -51,6 +52,7 @@ export default function Playground() {
       <FormCodePlayground />
       <FormImageCropperPlayground />
       <FormColorpickerPlayground />
+      <TabsPlayground />
     </div>
   );
 }
