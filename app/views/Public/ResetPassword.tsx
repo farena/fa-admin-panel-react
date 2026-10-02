@@ -14,7 +14,7 @@ export default function ResetPassword({ params }: Route.ComponentProps) {
   const resetPassword = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     // TODO: dispatch resetPassword(form), toast "Password updated. You can now sign in"
-    // y navegar a /
+    // and navigate to /
     console.log(form);
   };
 

@@ -31,7 +31,7 @@ export default function FormHtmlPlayground() {
         <FormHtml
           label="Email template"
           value={html.mentions}
-          placeholder="Escribí algo…"
+          placeholder="Write something…"
           autocompleteOpts={["#name", "#surname", "#email"]}
           lang="es"
           onChange={(mentions) => setHtml({ ...html, mentions })}

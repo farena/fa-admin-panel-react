@@ -8,7 +8,7 @@ export default function ForgotPassword() {
 
   const resetPassword = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: dispatch forgotPassword(form) y mostrar toast
+    // TODO: dispatch forgotPassword(form) and show toast
     // "Password reset has been sent. Please check your email"
     console.log(form);
   };

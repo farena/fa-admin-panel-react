@@ -34,37 +34,6 @@
   }
 }
 
-.card.room_card {
-  .card-imgs {
-    overflow: hidden;
-  }
-
-  .card-img {
-    background-image: url("/img/default-image.png");
-    background-position: center center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    display: block;
-    position: relative;
-    min-height: 200px;
-  }
-
-  .card-body {
-    > p {
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      line-clamp: 3;
-      -webkit-box-orient: vertical;
-      min-height: 65px;
-    }
-
-    table.table tr:first-child td {
-      border-top: unset;
-    }
-  }
-}
-
 .card.widget {
   margin-top: 0;
   display: flex;

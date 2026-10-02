@@ -70,9 +70,9 @@ export default function FormDateRangePlayground() {
       </Example>
       <Example title="Custom lang (lang={es})">
         <FormDateRange
-          label="Período"
-          startPlaceholder="Desde"
-          endPlaceholder="Hasta"
+          label="Period"
+          startPlaceholder="From"
+          endPlaceholder="To"
           lang={es}
           {...field("spanish")}
         />

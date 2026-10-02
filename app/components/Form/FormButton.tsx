@@ -58,23 +58,23 @@ export default function FormButton({
     const tooltipWidth = tooltipRect.width;
     const tooltipHeight = tooltipRect.height;
 
-    // Verifica la proximidad al borde derecho del contenedor
+    // Check proximity to the container's right edge
     if (wrapperRect.right - buttonRect.right < tooltipWidth) {
       setTooltipPosition("left");
     }
-    // Verifica la proximidad al borde izquierdo del contenedor
+    // Check proximity to the container's left edge
     else if (buttonRect.left - wrapperRect.left < tooltipWidth) {
       setTooltipPosition("right");
     }
-    // Verifica la proximidad al borde inferior del contenedor
+    // Check proximity to the container's bottom edge
     else if (wrapperRect.bottom - buttonRect.bottom < tooltipHeight) {
       setTooltipPosition("top");
     }
-    // Verifica la proximidad al borde superior del contenedor
+    // Check proximity to the container's top edge
     else if (buttonRect.top - wrapperRect.top < tooltipHeight) {
       setTooltipPosition("bottom");
     } else {
-      setTooltipPosition("left"); // Posición por defecto
+      setTooltipPosition("left"); // Default position
     }
   };
 

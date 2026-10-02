@@ -90,7 +90,7 @@ export default function Sidebar() {
   return (
     <div className="sidebar">
       <div className="brand">
-        <img src="/img/logo.svg" className="brand-logo" alt="" />
+        <img src={`${import.meta.env.BASE_URL}img/logo.svg`} className="brand-logo" alt="" />
         <h1>QUARTZ</h1>
       </div>
       <ul className="menu">

@@ -19,7 +19,7 @@ export default function Login() {
 
   const signIn = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: dispatch login(form) y navegar a /dashboard
+    // TODO: dispatch login(form) and navigate to /dashboard
     console.log(form);
   };
 

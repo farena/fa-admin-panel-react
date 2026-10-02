@@ -14,7 +14,7 @@ export default function ActivateUser({ params }: Route.ComponentProps) {
   const createPassword = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     // TODO: dispatch verifyUser(form), toast "User verified. You can now sign in"
-    // y navegar a /
+    // and navigate to /
     console.log(form);
   };
 

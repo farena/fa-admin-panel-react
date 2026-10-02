@@ -31,7 +31,7 @@ export default function FormWeeklyDatePlayground() {
       </Example>
       <Example title="Custom lang">
         <FormWeeklyDate
-          label="Días de entrega"
+          label="Delivery days"
           lang={ES_DAYS}
           value={weekly.spanish}
           onChange={(spanish) => setWeekly({ ...weekly, spanish })}

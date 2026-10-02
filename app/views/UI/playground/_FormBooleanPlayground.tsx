@@ -25,8 +25,8 @@ export default function FormBooleanPlayground() {
       <Example title="Custom labels">
         <FormBoolean
           label="Visible"
-          trueLabel="Sí"
-          falseLabel="No"
+          trueLabel="Shown"
+          falseLabel="Hidden"
           value={booleans.custom}
           onChange={(custom) => setBooleans({ ...booleans, custom })}
         />

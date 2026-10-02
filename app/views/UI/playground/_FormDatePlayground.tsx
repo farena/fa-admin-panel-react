@@ -67,7 +67,7 @@ export default function FormDatePlayground() {
         />
       </Example>
       <Example title="Custom lang (lang={es})">
-        <FormDate label="Fecha" lang={es} {...field("spanish")} />
+        <FormDate label="Date" lang={es} {...field("spanish")} />
       </Example>
       <Example title="Disabled">
         <FormDate label="Disabled" disabled {...field("disabled")} />
