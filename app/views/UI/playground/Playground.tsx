@@ -23,6 +23,7 @@ import FormColorpickerPlayground from "./_FormColorpickerPlayground";
 import TabsPlayground from "./_TabsPlayground";
 import FormHtmlPlayground from "./_FormHtmlPlayground";
 import AccordionPlayground from "./_AccordionPlayground";
+import InfiniteScrollPlayground from "./_InfiniteScrollPlayground";
 
 export default function Playground() {
   return (
@@ -57,6 +58,7 @@ export default function Playground() {
       <TabsPlayground />
       <FormHtmlPlayground />
       <AccordionPlayground />
+      <InfiniteScrollPlayground />
     </div>
   );
 }
