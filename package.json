@@ -9,12 +9,13 @@
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
     "@react-router/node": "^8.4.0",
     "@react-router/serve": "^8.4.0",
+    "isbot": "^5",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "react-router": "^8.4.0",
-    "isbot": "^5"
+    "react-router": "^8.4.0"
   },
   "devDependencies": {
     "@react-router/dev": "^8.4.0",
