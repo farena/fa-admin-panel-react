@@ -723,11 +723,28 @@ label {
 }
 
 .form-dropdown.form-date-dropdown {
-  max-width: 250px;
+  max-width: 320px;
 }
 
 .form-date-dropdown-wrapper {
   padding: 1em;
+}
+
+.form-dropdown.form-date-range-dropdown {
+  max-width: 320px;
+
+  .form-date-range-times {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5em;
+    margin-top: 0.75em;
+
+    small {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.25em;
+    }
+  }
 }
 
 .form-date-ranges {

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import es from "~/components/Calendar/lang/es";
 import FormDate from "~/components/Form/FormDate";
 import { addDays, toYmd } from "~/utils/date";
 import { Example, Section } from "./_PlaygroundLayout";
@@ -26,6 +27,7 @@ export default function FormDatePlayground() {
     minMax: null,
     disabled: "2026-01-15",
     error: null,
+    spanish: null,
   });
 
   const field = (key: string) => ({
@@ -63,6 +65,9 @@ export default function FormDatePlayground() {
           maxDate={MAX_DATE}
           {...field("minMax")}
         />
+      </Example>
+      <Example title="Custom lang (lang={es})">
+        <FormDate label="Fecha" lang={es} {...field("spanish")} />
       </Example>
       <Example title="Disabled">
         <FormDate label="Disabled" disabled {...field("disabled")} />

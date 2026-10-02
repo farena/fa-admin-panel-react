@@ -53,6 +53,17 @@ export function addDays(date: Date, days: number): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate() + days);
 }
 
+// Clamps to the last day of the target month (Jan 31 + 1 month = Feb 28/29), keeps the time
+export function addMonths(date: Date, months: number): Date {
+  const target = new Date(date);
+  target.setDate(1);
+  target.setMonth(target.getMonth() + months);
+
+  const lastDay = new Date(target.getFullYear(), target.getMonth() + 1, 0);
+  target.setDate(Math.min(date.getDate(), lastDay.getDate()));
+  return target;
+}
+
 // YYYY-MM-DD
 export function toYmd(date: Date): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;

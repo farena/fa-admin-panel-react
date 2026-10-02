@@ -13,6 +13,7 @@ import FormLinkPlayground from "./_FormLinkPlayground";
 import FormTimePlayground from "./_FormTimePlayground";
 import FormWeeklyDatePlayground from "./_FormWeeklyDatePlayground";
 import FormDatePlayground from "./_FormDatePlayground";
+import FormDateRangePlayground from "./_FormDateRangePlayground";
 import ToastPlayground from "./_ToastPlayground";
 import FormUploaderPlayground from "./_FormUploaderPlayground";
 import FormCommentPlayground from "./_FormCommentPlayground";
@@ -42,6 +43,7 @@ export default function Playground() {
       <FormTimePlayground />
       <FormWeeklyDatePlayground />
       <FormDatePlayground />
+      <FormDateRangePlayground />
       <ToastPlayground />
       <FormUploaderPlayground />
       <FormCommentPlayground />

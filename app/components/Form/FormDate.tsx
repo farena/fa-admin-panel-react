@@ -1,37 +1,26 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useClassParser } from "~/hooks/useClassParser";
-import Calendar, { type CalendarRange } from "~/components/Calendar/Calendar";
+import { useFocusDropdown } from "~/hooks/useFocusDropdown";
+import Calendar, { type CalendarLang } from "~/components/Calendar/Calendar";
 import {
-  addDays,
-  parseDate,
-  parseToString,
-  startOfDay,
-  toDmy,
-  toHm,
-  toYmd,
-} from "~/utils/date";
+  useCalendarRestrictions,
+  type CalendarRestrictions,
+} from "~/components/Calendar/useCalendarRestrictions";
+import { parseDate, parseToString, toDmy, toHm, toYmd } from "~/utils/date";
 import FormDropdown from "./FormDropdown";
 import FormTime from "./FormTime";
 
-export type DateRange = {
-  start: string; // YYYY-MM-DD or DD-MM-YYYY
-  end: string;
-};
+export type { DateRange } from "~/components/Calendar/useCalendarRestrictions";
 
-type FormDateProps = {
+type FormDateProps = CalendarRestrictions & {
   value: string | null; // YYYY-MM-DD, or YYYY-MM-DD HH:mm with dateTime
   label?: string;
   placeholder?: string;
   disabled?: boolean;
   dateTime?: boolean;
-  disabledDates?: string[] | null; // YYYY-MM-DD
-  availableDates?: string[] | null; // YYYY-MM-DD, when set only these dates are enabled
-  disabledWeekdays?: number[] | null; // 0 Sunday ... 6 Saturday
-  disabledRanges?: DateRange[] | null;
-  minDate?: Date | null;
-  maxDate?: Date | null;
   flexField?: boolean;
   errors?: string[];
+  lang?: Partial<CalendarLang>; // Calendar texts, English by default
   onChange: (value: string | null) => void;
 };
 
@@ -62,14 +51,15 @@ export default function FormDate({
   maxDate,
   flexField = false,
   errors,
+  lang,
   onChange,
 }: FormDateProps) {
   const id = useId();
+  const dropdownFocus = useFocusDropdown();
   const [datePart, setDatePart] = useState<string | null>(null); // YYYY-MM-DD
   const [timePart, setTimePart] = useState<string | null>(null); // HH:mm
   const [inputValue, setInputValue] = useState("");
   const [previousValidInput, setPreviousValidInput] = useState("");
-  const [visibleRange, setVisibleRange] = useState<CalendarRange | null>(null);
 
   const syncFromDate = (date: Date) => {
     const newDatePart = toYmd(date);
@@ -95,64 +85,14 @@ export default function FormDate({
     if (date) syncFromDate(date);
   }, [value, dateTime]);
 
-  const calendarAvailableDates = useMemo(() => {
-    if (!availableDates?.length) return null;
-
-    const out = availableDates
-      .map((d) => parseDate(d))
-      .filter((d): d is Date => !!d)
-      .map(toYmd);
-
-    return out.length ? out : null;
-  }, [availableDates]);
-
-  const calendarDisabledDates = useMemo(() => {
-    // When availableDates is set, only those dates are shown (Calendar handles it); no disabled list
-    if (calendarAvailableDates) return [];
-
-    const result = new Set<string>();
-
-    disabledDates?.forEach((d) => {
-      const date = parseDate(d);
-      if (date) result.add(toYmd(date));
-    });
-
-    const weekdays = disabledWeekdays ?? [];
-    const ranges = (disabledRanges ?? [])
-      .map((r) => ({ start: parseDate(r.start), end: parseDate(r.end) }))
-      .filter((r): r is { start: Date; end: Date } => !!r.start && !!r.end);
-    const min = minDate ? toYmd(startOfDay(minDate)) : null;
-    const max = maxDate ? toYmd(startOfDay(maxDate)) : null;
-
-    const from = parseDate(visibleRange?.from);
-    const to = parseDate(visibleRange?.to);
-
-    if (
-      from &&
-      to &&
-      (weekdays.length > 0 || ranges.length > 0 || min || max)
-    ) {
-      for (let d = from; d <= to; d = addDays(d, 1)) {
-        const dateStr = toYmd(d);
-
-        if (weekdays.includes(d.getDay())) result.add(dateStr);
-        if (ranges.some((r) => d >= r.start && d <= r.end)) result.add(dateStr);
-        // YYYY-MM-DD strings compare chronologically
-        if (min && dateStr < min) result.add(dateStr);
-        if (max && dateStr > max) result.add(dateStr);
-      }
-    }
-
-    return Array.from(result);
-  }, [
-    calendarAvailableDates,
+  const calendar = useCalendarRestrictions({
     disabledDates,
+    availableDates,
     disabledWeekdays,
     disabledRanges,
     minDate,
     maxDate,
-    visibleRange,
-  ]);
+  });
 
   const emitChange = (
     newDatePart: string | null,
@@ -176,7 +116,7 @@ export default function FormDate({
   const parentValueHasTime = () =>
     !!value && /\s\d{1,2}:\d{2}$/.test(value.trim());
 
-  const onClickInput = (open: () => void) => {
+  const openDropdown = (open: () => void) => {
     if (disabled) return;
 
     open();
@@ -219,8 +159,12 @@ export default function FormDate({
         className="form-date-dropdown"
         parentEl={`#formdate_wrapper_${id}`}
         slots={{
-          action: ({ open }) => (
-            <div className="form-wrapper" id={`formdate_wrapper_${id}`}>
+          action: ({ open, close }) => (
+            <div
+              className="form-wrapper"
+              id={`formdate_wrapper_${id}`}
+              ref={dropdownFocus.fieldRef}
+            >
               {!flexField && (
                 <div className="icon">
                   <i className="fa-solid fa-calendar-day" />
@@ -233,11 +177,15 @@ export default function FormDate({
                 placeholder={placeholder}
                 disabled={disabled}
                 autoComplete="off"
+                onFocus={() => openDropdown(open)}
                 onClick={(e) => {
                   e.stopPropagation();
-                  onClickInput(open);
+                  openDropdown(open);
                 }}
-                onBlur={onBlurInput}
+                onBlur={(e) => {
+                  onBlurInput();
+                  dropdownFocus.onFieldBlur(e, close);
+                }}
                 onChange={(e) => setInputValue(e.target.value)}
               />
             </div>
@@ -245,12 +193,16 @@ export default function FormDate({
         }}
       >
         {({ close }) => (
-          <div className="form-date-dropdown-wrapper">
+          <div
+            className="form-date-dropdown-wrapper"
+            {...dropdownFocus.contentProps(close)}
+          >
             <Calendar
               value={datePart}
-              availableDates={calendarAvailableDates}
-              disabledDates={calendarDisabledDates}
-              onRangeChange={setVisibleRange}
+              lang={lang}
+              availableDates={calendar.availableDates}
+              disabledDates={calendar.disabledDates}
+              onRangeChange={calendar.onRangeChange}
               onChange={(date) => {
                 emitChange(date, timePart);
                 if (!dateTime) close();
@@ -261,10 +213,10 @@ export default function FormDate({
               <FormTime
                 value={timePart}
                 disabled={disabled}
+                // Stays open while editing hour/minute; closes once the focus leaves
                 onChange={(time) => {
                   setTimePart(time);
                   emitChange(datePart, time);
-                  close();
                 }}
               />
             )}

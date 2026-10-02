@@ -64,6 +64,9 @@ const MONTH_KEYS = [
   "december",
 ] as const satisfies readonly (keyof CalendarLang)[];
 
+// "September" -> "sep", for the month picker grid
+const shortMonth = (name: string) => name.slice(0, 3).toLowerCase();
+
 const pad = (n: number) => String(n).padStart(2, "0");
 
 function formatDate(date: Date): string {
@@ -134,6 +137,35 @@ export default function Calendar({
     () => (parseDate(value)?.getMonth() ?? new Date().getMonth()) + 1, // 1-12
   );
 
+  // Month/year picker opened from the header title
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerYear, setPickerYear] = useState(selectedYear);
+  const pickerRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLButtonElement>(null);
+  const today = new Date();
+
+  // Close the picker on click outside or Escape
+  useEffect(() => {
+    if (!pickerOpen) return;
+
+    const onMouseDown = (e: MouseEvent) => {
+      const target = e.target as Node;
+      // The title toggles the picker by itself
+      if (titleRef.current?.contains(target)) return;
+      if (!pickerRef.current?.contains(target)) setPickerOpen(false);
+    };
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPickerOpen(false);
+    };
+
+    window.addEventListener("mousedown", onMouseDown);
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("mousedown", onMouseDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [pickerOpen]);
+
   // Move the visible month to the selected value when it changes
   useEffect(() => {
     const date = parseDate(value);
@@ -162,28 +194,6 @@ export default function Calendar({
 
     return () => clearTimeout(timer);
   }, [selectedYear, selectedMonth]);
-
-  const yearsList = useMemo(() => {
-    const years = new Set([new Date().getFullYear()]);
-
-    const addYearsFromList = (list?: string[] | null) => {
-      if (!Array.isArray(list)) return;
-      list.forEach((d) => {
-        const date = parseDate(d);
-        if (date) years.add(date.getFullYear());
-      });
-    };
-
-    addYearsFromList(availableDates);
-    addYearsFromList(disabledDates);
-
-    // Ensure we have a reasonable range even when no lists are provided
-    const minYear = Math.min(...years) - 1;
-    const maxYear = Math.max(...years) + 1;
-    for (let y = minYear; y <= maxYear; y++) years.add(y);
-
-    return Array.from(years).sort((a, b) => a - b);
-  }, [availableDates, disabledDates]);
 
   const availableSet = useMemo(
     () => toValidSet(availableDates),
@@ -239,6 +249,24 @@ export default function Calendar({
     onChange?.(cell.date);
   };
 
+  // Moves the visible month, wrapping the year when needed
+  const shiftMonth = (delta: number) => {
+    const date = new Date(selectedYear, selectedMonth - 1 + delta, 1);
+    setSelectedYear(date.getFullYear());
+    setSelectedMonth(date.getMonth() + 1);
+  };
+
+  const openPicker = () => {
+    setPickerYear(selectedYear);
+    setPickerOpen(true);
+  };
+
+  const pickMonth = (month: number) => {
+    setSelectedYear(pickerYear);
+    setSelectedMonth(month);
+    setPickerOpen(false);
+  };
+
   return (
     <div
       className={useClassParser({
@@ -248,31 +276,79 @@ export default function Calendar({
       })}
     >
       <div className="calendar-header">
-        <div className="calendar-controls">
-          <select
-            className="calendar-select"
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-          >
-            {yearsList.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
+        <button
+          type="button"
+          className="calendar-nav"
+          aria-label="Previous month"
+          onClick={() => shiftMonth(-1)}
+        >
+          <i className="fa-solid fa-chevron-left" />
+        </button>
 
-          <select
-            className="calendar-select"
-            value={selectedMonth}
-            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-          >
-            {MONTH_KEYS.map((key, i) => (
-              <option key={key} value={i + 1}>
-                {t[key]}
-              </option>
-            ))}
-          </select>
-        </div>
+        <button
+          type="button"
+          ref={titleRef}
+          className="calendar-title"
+          onClick={() => (pickerOpen ? setPickerOpen(false) : openPicker())}
+        >
+          {t[MONTH_KEYS[selectedMonth - 1]]} {selectedYear}
+        </button>
+
+        <button
+          type="button"
+          className="calendar-nav"
+          aria-label="Next month"
+          onClick={() => shiftMonth(1)}
+        >
+          <i className="fa-solid fa-chevron-right" />
+        </button>
+
+        {pickerOpen && (
+          <div className="calendar-picker" ref={pickerRef}>
+            <div className="calendar-picker-header">
+              <button
+                type="button"
+                className="calendar-nav"
+                aria-label="Previous year"
+                onClick={() => setPickerYear((y) => y - 1)}
+              >
+                <i className="fa-solid fa-chevron-left" />
+              </button>
+              <span className="calendar-picker-year">{pickerYear}</span>
+              <button
+                type="button"
+                className="calendar-nav"
+                aria-label="Next year"
+                onClick={() => setPickerYear((y) => y + 1)}
+              >
+                <i className="fa-solid fa-chevron-right" />
+              </button>
+            </div>
+
+            <div className="calendar-picker-months">
+              {MONTH_KEYS.map((key, i) => (
+                <button
+                  key={key}
+                  type="button"
+                  className={[
+                    "calendar-picker-month",
+                    pickerYear === selectedYear &&
+                      i + 1 === selectedMonth &&
+                      "selected",
+                    pickerYear === today.getFullYear() &&
+                      i === today.getMonth() &&
+                      "current",
+                  ]
+                    .filter(Boolean)
+                    .join(" ")}
+                  onClick={() => pickMonth(i + 1)}
+                >
+                  {shortMonth(t[key])}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="calendar-weekdays">
