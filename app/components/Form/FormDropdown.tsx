@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import { useClassParser } from "~/hooks/useClassParser";
 
 type Position = "top" | "bottom" | "left" | "right";
 
@@ -32,6 +33,7 @@ export default function FormDropdown({
   parentEl,
   slots,
   children,
+  className,
 }: FormDropdownProps) {
   const [ready, setReady] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -221,7 +223,10 @@ export default function FormDropdown({
         dropdownOpen &&
         createPortal(
           <div
-            className="form-dropdown"
+            className={useClassParser({
+              "form-dropdown": true,
+              [className as string]: !!className,
+            })}
             style={{ position: "fixed" }}
             ref={dropdownRef}
           >

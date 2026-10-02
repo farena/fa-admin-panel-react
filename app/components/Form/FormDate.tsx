@@ -36,7 +36,11 @@ type FormDateProps = {
 };
 
 // The value the input shows: DD-MM-YYYY [HH:mm]
-function formatDisplay(datePart: string, timePart: string | null, dateTime: boolean) {
+function formatDisplay(
+  datePart: string,
+  timePart: string | null,
+  dateTime: boolean,
+) {
   const raw = dateTime ? `${datePart} ${timePart || "00:00"}` : datePart;
   const date = parseDate(raw, dateTime);
   if (!date) return null;
@@ -150,7 +154,10 @@ export default function FormDate({
     visibleRange,
   ]);
 
-  const emitChange = (newDatePart: string | null, newTimePart: string | null) => {
+  const emitChange = (
+    newDatePart: string | null,
+    newTimePart: string | null,
+  ) => {
     if (!newDatePart) {
       onChange(null);
       return;
@@ -209,6 +216,7 @@ export default function FormDate({
       {label && <label htmlFor={id}>{label}</label>}
 
       <FormDropdown
+        className="form-date-dropdown"
         parentEl={`#formdate_wrapper_${id}`}
         slots={{
           action: ({ open }) => (
@@ -264,9 +272,7 @@ export default function FormDate({
         )}
       </FormDropdown>
 
-      {!!errors?.length && (
-        <p className="error-message">{errors.join(", ")}</p>
-      )}
+      {!!errors?.length && <p className="error-message">{errors.join(", ")}</p>}
     </div>
   );
 }
