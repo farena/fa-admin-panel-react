@@ -1,12 +1,14 @@
 {
-  "name": "fa-admin-panel",
+  "name": "@farena/fa-admin-panel-react",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "build:pages": "GITHUB_PAGES=true react-router build"
   },
   "dependencies": {
     "@farena/fa-modal-react": "^0.0.0",
