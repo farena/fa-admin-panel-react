@@ -22,6 +22,7 @@ import FormImageCropperPlayground from "./_FormImageCropperPlayground";
 import FormColorpickerPlayground from "./_FormColorpickerPlayground";
 import TabsPlayground from "./_TabsPlayground";
 import FormHtmlPlayground from "./_FormHtmlPlayground";
+import AccordionPlayground from "./_AccordionPlayground";
 
 export default function Playground() {
   return (
@@ -55,6 +56,7 @@ export default function Playground() {
       <FormColorpickerPlayground />
       <TabsPlayground />
       <FormHtmlPlayground />
+      <AccordionPlayground />
     </div>
   );
 }
