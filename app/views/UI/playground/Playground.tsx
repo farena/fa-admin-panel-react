@@ -18,6 +18,7 @@ import ToastPlayground from "./_ToastPlayground";
 import FormUploaderPlayground from "./_FormUploaderPlayground";
 import FormCommentPlayground from "./_FormCommentPlayground";
 import FormCodePlayground from "./_FormCodePlayground";
+import FormImageCropperPlayground from "./_FormImageCropperPlayground";
 import FormColorpickerPlayground from "./_FormColorpickerPlayground";
 
 export default function Playground() {
@@ -48,6 +49,7 @@ export default function Playground() {
       <FormUploaderPlayground />
       <FormCommentPlayground />
       <FormCodePlayground />
+      <FormImageCropperPlayground />
       <FormColorpickerPlayground />
     </div>
   );

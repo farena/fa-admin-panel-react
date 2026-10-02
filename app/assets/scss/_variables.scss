@@ -96,4 +96,13 @@ $custom-sizes: map-merge(
   // contenido que ya esta en la base: cambiarlos cambia como se ve.
   --fa-color-mention-background: hsla(341, 100%, 30%, 0.1);
   --fa-color-mention-text: hsl(341, 100%, 30%);
+
+  // FaModal (@farena/fa-modal-react) with the panel theme. Declared after its
+  // stylesheet, so it also wins over its prefers-color-scheme: dark block
+  --fa-modals-text: var(--body-text);
+  --fa-modals-bg: var(--color-white);
+  --fa-modals-bghover: var(--color-light-shade);
+  --fa-modals-border: var(--color-white-shade);
+  --fa-modals-shadow: var(--shadow);
+  --fa-modals-radius: var(--radius);
 }

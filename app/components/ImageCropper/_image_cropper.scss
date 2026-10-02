@@ -1,0 +1,113 @@
+.image-cropper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #ffffff;
+  user-select: none;
+  // Pointer events drive the drag, so the browser must not pan or zoom
+  touch-action: none;
+
+  > img {
+    position: absolute;
+    max-width: none;
+    pointer-events: none;
+  }
+}
+
+.image-cropper-stencil {
+  position: absolute;
+  cursor: move;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  // Dims everything outside the crop area
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.55);
+
+  // Rule of thirds guides
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border: 0 dashed rgba(255, 255, 255, 0.45);
+  }
+
+  &::before {
+    left: 33.333%;
+    right: 33.333%;
+    border-left-width: 1px;
+    border-right-width: 1px;
+  }
+
+  &::after {
+    top: 33.333%;
+    bottom: 33.333%;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+  }
+}
+
+// The box-shadow follows the radius, so only the circle stays undimmed.
+// Handles stay on the bounding square
+.image-cropper-stencil--circle {
+  border-radius: 50%;
+
+  // Square guides would stick out of the circle
+  &::before,
+  &::after {
+    display: none;
+  }
+}
+
+.image-cropper-handle {
+  --size: 12px;
+
+  position: absolute;
+  z-index: 1;
+  width: var(--size);
+  height: var(--size);
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 2px;
+  transform: translate(-50%, -50%);
+
+  &--nw {
+    left: 0;
+    top: 0;
+    cursor: nwse-resize;
+  }
+  &--n {
+    left: 50%;
+    top: 0;
+    cursor: ns-resize;
+  }
+  &--ne {
+    left: 100%;
+    top: 0;
+    cursor: nesw-resize;
+  }
+  &--e {
+    left: 100%;
+    top: 50%;
+    cursor: ew-resize;
+  }
+  &--se {
+    left: 100%;
+    top: 100%;
+    cursor: nwse-resize;
+  }
+  &--s {
+    left: 50%;
+    top: 100%;
+    cursor: ns-resize;
+  }
+  &--sw {
+    left: 0;
+    top: 100%;
+    cursor: nesw-resize;
+  }
+  &--w {
+    left: 0;
+    top: 50%;
+    cursor: ew-resize;
+  }
+}
