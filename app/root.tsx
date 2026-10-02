@@ -38,6 +38,7 @@ const DEV_ROUTES = [
   { label: "Forgot password", to: "/forgot_password" },
   { label: "Reset password", to: "/reset_password/test-token" },
   { label: "Activate user", to: "/activate_user/test-token" },
+  { label: "Dashboard", to: "/dashboard" },
 ];
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -50,8 +51,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        {/* Routes to playground or to dashboard templates */}
-
         <nav className="nav bg-primary border-bottom py-1">
           <div className="container">
             <div className="d-flex justify-content-between">

@@ -13,4 +13,7 @@ export default [
     route("reset_password/:token", "views/Public/ResetPassword.tsx"),
     route("activate_user/:token", "views/Public/ActivateUser.tsx"),
   ]),
+  layout("views/_Layouts/DashboardLayout.tsx", [
+    route("dashboard", "views/Auth/Dashboard.tsx"),
+  ]),
 ] satisfies RouteConfig;
