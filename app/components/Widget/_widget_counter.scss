@@ -1,0 +1,26 @@
+.counter-widget-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+.counter-widget-info {
+  position: relative;
+  cursor: help;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.counter-widget-tooltip {
+  white-space: normal;
+  width: 240px;
+  font-weight: 400;
+  font-size: 0.85em;
+  line-height: 1.35;
+  text-align: left;
+}

@@ -18,7 +18,7 @@
   }
 
   .card-img {
-    background-image: url('http://via.placeholder.com/400');
+    background-image: url("http://via.placeholder.com/400");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -40,7 +40,7 @@
   }
 
   .card-img {
-    background-image: url('/img/default-image.png');
+    background-image: url("/img/default-image.png");
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -83,6 +83,11 @@
       display: block;
       margin-right: 1em;
     }
+    .widget-title {
+      display: flex;
+      align-items: flex-end;
+    }
+
     h3 {
       font-size: 1.25em;
       margin: 0;
@@ -100,7 +105,6 @@
     }
 
     .widget-desc {
-      align-self: flex-end;
       margin-left: 1em;
     }
   }
@@ -237,6 +241,13 @@
     bottom: unset;
     top: calc(100% + 5px);
     transform: translateX(-50%);
+  }
+
+  &.bottom-left {
+    left: unset;
+    top: calc(100% + 5px);
+    right: 50%;
+    transform: translateY(-50%) translateX(0);
   }
 }
 

@@ -25,6 +25,7 @@ import FormHtmlPlayground from "./_FormHtmlPlayground";
 import AccordionPlayground from "./_AccordionPlayground";
 import InfiniteScrollPlayground from "./_InfiniteScrollPlayground";
 import SimplePagerPlayground from "./_SimplePagerPlayground";
+import WidgetPlayground from "./_WidgetPlayground";
 
 export default function Playground() {
   return (
@@ -61,6 +62,7 @@ export default function Playground() {
       <AccordionPlayground />
       <InfiniteScrollPlayground />
       <SimplePagerPlayground />
+      <WidgetPlayground />
     </div>
   );
 }
