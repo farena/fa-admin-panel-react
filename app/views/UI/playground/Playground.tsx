@@ -26,43 +26,73 @@ import AccordionPlayground from "./_AccordionPlayground";
 import InfiniteScrollPlayground from "./_InfiniteScrollPlayground";
 import SimplePagerPlayground from "./_SimplePagerPlayground";
 import WidgetPlayground from "./_WidgetPlayground";
+import { NavLink } from "react-router";
+
+const DEV_ROUTES = [
+  { label: "Playground", to: "/" },
+  { label: "Login", to: "/login" },
+  { label: "Forgot password", to: "/forgot_password" },
+  { label: "Reset password", to: "/reset_password/test-token" },
+  { label: "Activate user", to: "/activate_user/test-token" },
+  { label: "Dashboard", to: "/dashboard" },
+];
 
 export default function Playground() {
   return (
-    <div className="container py-4">
-      <h2 className="mb-1">UI Playground</h2>
-      <p className="text-muted mb-4">
-        Sandbox to test the <code>components/Form</code> components.
-      </p>
+    <>
+      <nav className="nav bg-primary border-bottom py-1">
+        <div className="container">
+          <div className="d-flex justify-content-between">
+            {DEV_ROUTES.map((route) => (
+              <NavLink
+                key={route.to}
+                to={route.to}
+                end
+                className={({ isActive }) =>
+                  `nav-link text-white${isActive ? " font-weight-bold" : ""}`
+                }
+              >
+                {route.label}
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      </nav>
+      <div className="container py-4">
+        <h2 className="mb-1">UI Playground</h2>
+        <p className="text-muted mb-4">
+          Sandbox to test the <code>components/Form</code> components.
+        </p>
 
-      <FormTextPlayground />
-      <FormNumberPlayground />
-      <FormSwitchPlayground />
-      <FormCheckboxPlayground />
-      <FormBlockPlayground />
-      <FormDropdownPlayground />
-      <FormComboboxPlayground />
-      <CalendarPlayground />
-      <FormButtonPlayground />
-      <FormSelectPlayground />
-      <FormBooleanPlayground />
-      <FormLinkPlayground />
-      <FormTimePlayground />
-      <FormWeeklyDatePlayground />
-      <FormDatePlayground />
-      <FormDateRangePlayground />
-      <ToastPlayground />
-      <FormUploaderPlayground />
-      <FormCommentPlayground />
-      <FormCodePlayground />
-      <FormImageCropperPlayground />
-      <FormColorpickerPlayground />
-      <TabsPlayground />
-      <FormHtmlPlayground />
-      <AccordionPlayground />
-      <InfiniteScrollPlayground />
-      <SimplePagerPlayground />
-      <WidgetPlayground />
-    </div>
+        <FormTextPlayground />
+        <FormNumberPlayground />
+        <FormSwitchPlayground />
+        <FormCheckboxPlayground />
+        <FormBlockPlayground />
+        <FormDropdownPlayground />
+        <FormComboboxPlayground />
+        <CalendarPlayground />
+        <FormButtonPlayground />
+        <FormSelectPlayground />
+        <FormBooleanPlayground />
+        <FormLinkPlayground />
+        <FormTimePlayground />
+        <FormWeeklyDatePlayground />
+        <FormDatePlayground />
+        <FormDateRangePlayground />
+        <ToastPlayground />
+        <FormUploaderPlayground />
+        <FormCommentPlayground />
+        <FormCodePlayground />
+        <FormImageCropperPlayground />
+        <FormColorpickerPlayground />
+        <TabsPlayground />
+        <FormHtmlPlayground />
+        <AccordionPlayground />
+        <InfiniteScrollPlayground />
+        <SimplePagerPlayground />
+        <WidgetPlayground />
+      </div>
+    </>
   );
 }
