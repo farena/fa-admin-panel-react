@@ -415,6 +415,7 @@
 
     .color-picker {
       height: 30px;
+      width: 30px;
       margin: 0;
       border: 1px solid rgba(0, 0, 0, 0.25);
       border-radius: var(--radius);
@@ -438,13 +439,19 @@
         border-radius: 50%;
       }
 
-      .color-input {
-        .box {
-          opacity: 0;
-          height: 28px;
-          width: 28px;
-          pointer-events: none;
-        }
+      // Native picker stretched invisibly over the swatch, so a click opens it
+      input[type="color"] {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+      }
+
+      > button {
+        z-index: 3;
       }
 
       &.no-color {
