@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { useClassParser } from "~/hooks/useClassParser";
+import FormIcon from "./FormIcon";
 import FormDropdown from "./FormDropdown";
 
 export type SelectOption = Record<string, unknown> | string | number;
@@ -174,15 +175,6 @@ export default function FormSelect({
     }
   };
 
-  const iconElement = icon && (
-    <span className="icon">
-      {iconMaterial ? (
-        <i className="material-symbols-outlined">{icon}</i>
-      ) : (
-        <i className={icon} />
-      )}
-    </span>
-  );
 
   return (
     <div
@@ -203,7 +195,7 @@ export default function FormSelect({
 
       {!multiple ? (
         <div className="form-wrapper">
-          {iconElement}
+          <FormIcon icon={icon} iconMaterial={iconMaterial} />
           <select
             id={id}
             value={selectedIndex === -1 ? "" : String(selectedIndex)}
@@ -227,7 +219,7 @@ export default function FormSelect({
           slots={{
             action: ({ open, close }) => (
               <div className="form-wrapper" id={`form_wrapper_${id}`}>
-                {iconElement}
+                <FormIcon icon={icon} iconMaterial={iconMaterial} />
 
                 <div
                   id={id}

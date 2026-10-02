@@ -1,11 +1,13 @@
 import { useId, type InputHTMLAttributes } from "react";
 import { useClassParser } from "~/hooks/useClassParser";
+import FormIcon from "./FormIcon";
 
 type FormTextProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
   label?: string;
   placeholder?: string;
   description?: string;
   icon?: string;
+  iconMaterial?: boolean;
   password?: boolean;
   value: string;
   disabled?: boolean;
@@ -23,6 +25,7 @@ export default function FormText({
   placeholder,
   description,
   icon,
+  iconMaterial = false,
   password = false,
   value,
   disabled = false,
@@ -49,11 +52,7 @@ export default function FormText({
     >
       {label && <label htmlFor={id}>{label}</label>}
       <div className="form-wrapper">
-        {icon && (
-          <span className="icon">
-            <i className={icon} />
-          </span>
-        )}
+        <FormIcon icon={icon} iconMaterial={iconMaterial} />
         {textarea ? (
           <textarea
             placeholder={placeholder || " "}

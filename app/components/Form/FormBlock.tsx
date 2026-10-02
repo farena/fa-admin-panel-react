@@ -1,5 +1,6 @@
 import { type InputHTMLAttributes, type ReactNode } from "react";
 import { useClassParser } from "~/hooks/useClassParser";
+import FormIcon from "./FormIcon";
 
 type FormBlockProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -7,6 +8,7 @@ type FormBlockProps = Omit<
 > & {
   label?: string;
   icon?: string;
+  iconMaterial?: boolean;
   disabled?: boolean;
   flexField?: boolean;
   errors?: string[];
@@ -17,6 +19,7 @@ export default function FormBlock({
   id,
   label,
   icon,
+  iconMaterial = false,
   disabled = false,
   flexField = false,
   errors,
@@ -33,11 +36,7 @@ export default function FormBlock({
     >
       {label && <label htmlFor={id}>{label}</label>}
       <div className="form-wrapper">
-        {icon && (
-          <span className="icon">
-            <i className={icon} />
-          </span>
-        )}
+        <FormIcon icon={icon} iconMaterial={iconMaterial} />
         <div className="flex-1" style={{ minHeight: "32px" }}>
           {children}
         </div>

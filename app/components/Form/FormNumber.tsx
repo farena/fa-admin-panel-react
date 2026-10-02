@@ -13,6 +13,7 @@ import {
   dollarsToCents,
   formatCentsToMoney,
 } from "~/utils/string";
+import FormIcon from "./FormIcon";
 
 type FormNumberProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
@@ -22,6 +23,7 @@ type FormNumberProps = Omit<
   label?: string;
   description?: string;
   icon?: string;
+  iconMaterial?: boolean;
   disabled?: boolean;
   flexField?: boolean;
   selectOnFocus?: boolean;
@@ -41,6 +43,7 @@ export default function FormNumber({
   label,
   description,
   icon,
+  iconMaterial = false,
   disabled = false,
   flexField = false,
   selectOnFocus = false,
@@ -113,11 +116,7 @@ export default function FormNumber({
         </label>
       )}
       <div className="form-wrapper">
-        {icon && (
-          <div className="icon">
-            <i className={icon}></i>
-          </div>
-        )}
+        <FormIcon icon={icon} iconMaterial={iconMaterial} as="div" />
         <input
           {...props}
           type={inputType}

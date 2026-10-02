@@ -10,6 +10,7 @@ import {
   type SyntheticEvent,
 } from "react";
 import debounce from "~/utils/debounce";
+import FormIcon from "./FormIcon";
 
 type OptionRecord = {
   label: string;
@@ -21,6 +22,7 @@ interface FormComboboxProps<OptionRecord> {
   label?: string;
   placeholder?: string;
   icon?: string;
+  iconMaterial?: boolean;
   multiple?: boolean;
   disabled?: boolean;
   flexField?: boolean;
@@ -40,6 +42,7 @@ export default function FormCombobox({
   label,
   placeholder,
   icon,
+  iconMaterial = false,
   multiple = false,
   disabled = false,
   flexField = false,
@@ -234,11 +237,7 @@ export default function FormCombobox({
               })}
               id={`form_wrapper_${id}`}
             >
-              {icon && (
-                <div className="icon">
-                  <i className={icon} />
-                </div>
-              )}
+              <FormIcon icon={icon} iconMaterial={iconMaterial} as="div" />
 
               <input
                 type="text"

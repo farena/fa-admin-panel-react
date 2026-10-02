@@ -1,5 +1,6 @@
 import { useRef, useState, type ButtonHTMLAttributes, type MouseEvent, type Ref } from "react";
 import { Link, type To } from "react-router";
+import FormIcon from "./FormIcon";
 
 type TooltipPosition = "left" | "right" | "top" | "bottom";
 
@@ -13,6 +14,7 @@ type FormButtonProps = Omit<ButtonHTMLAttributes<HTMLElement>, "type"> & {
   justIcon?: boolean;
   plain?: boolean;
   icon?: string;
+  iconMaterial?: boolean;
   tooltip?: string;
   tooltipContainer?: string | HTMLElement;
 };
@@ -28,6 +30,7 @@ export default function FormButton({
   justIcon,
   plain,
   icon,
+  iconMaterial = false,
   tooltip,
   tooltipContainer = ".content-wrapper",
   className,
@@ -100,11 +103,7 @@ export default function FormButton({
           {tooltip}
         </div>
       )}
-      {icon && (
-        <div className="icon">
-          <i className={`fa ${icon}`}></i>
-        </div>
-      )}
+      <FormIcon icon={icon} iconMaterial={iconMaterial} as="div" prefix="fa" />
       {children != null && children !== false && <span>{children}</span>}
     </>
   );
