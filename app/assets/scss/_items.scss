@@ -54,6 +54,7 @@
       overflow: hidden;
       display: -webkit-box;
       -webkit-line-clamp: 3;
+      line-clamp: 3;
       -webkit-box-orient: vertical;
       min-height: 65px;
     }
@@ -185,14 +186,6 @@
       flex-direction: column;
       gap: 0.25em;
     }
-  }
-}
-
-.swiper {
-  overflow: visible !important;
-
-  .swiper-pagination {
-    // bottom: var(--pagination-bottom, -20px) !important;
   }
 }
 
