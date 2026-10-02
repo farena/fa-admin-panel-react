@@ -510,20 +510,8 @@
     }
   }
   &.form-html {
-    --editor-height: 100px;
-
-    .fa-editor {
-      --fa-ed-radius: var(--radius);
-      --fa-ed-focus-ring: 1px solid var(--color-primary);
-    }
-    .fa-editor__content {
-      padding: 0.5em 1em;
-      min-height: 100px;
-      height: var(--editor-height);
-      overflow-y: auto;
-    }
+    --fa-wysiwyg-height: 100px;
   }
-
   &.form-code .form-wrapper {
     height: 300px;
   }
@@ -621,8 +609,8 @@
     .form-wrapper {
       border-color: var(--color-danger) !important;
     }
-    .fa-editor {
-      border: 1px solid var(--color-danger) !important;
+    .fa-wysiwyg {
+      border-color: var(--color-danger) !important;
     }
   }
 

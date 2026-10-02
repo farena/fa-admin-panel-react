@@ -21,6 +21,7 @@ import FormCodePlayground from "./_FormCodePlayground";
 import FormImageCropperPlayground from "./_FormImageCropperPlayground";
 import FormColorpickerPlayground from "./_FormColorpickerPlayground";
 import TabsPlayground from "./_TabsPlayground";
+import FormHtmlPlayground from "./_FormHtmlPlayground";
 
 export default function Playground() {
   return (
@@ -53,6 +54,7 @@ export default function Playground() {
       <FormImageCropperPlayground />
       <FormColorpickerPlayground />
       <TabsPlayground />
+      <FormHtmlPlayground />
     </div>
   );
 }

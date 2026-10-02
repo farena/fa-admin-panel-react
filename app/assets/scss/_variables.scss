@@ -92,11 +92,6 @@ $custom-sizes: map-merge(
   --sidebar-open-width: 250px;
   --topbar-height: 72px;
 
-  // Menciones del editor. Son los mismos valores con los que se guardo el
-  // contenido que ya esta en la base: cambiarlos cambia como se ve.
-  --fa-color-mention-background: hsla(341, 100%, 30%, 0.1);
-  --fa-color-mention-text: hsl(341, 100%, 30%);
-
   // FaModal (@farena/fa-modal-react) with the panel theme. Declared after its
   // stylesheet, so it also wins over its prefers-color-scheme: dark block
   --fa-modals-text: var(--body-text);

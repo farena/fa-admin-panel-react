@@ -1,0 +1,74 @@
+// FaWysiwyg (@farena/fa-wysiwyg-react) with the panel theme.
+// The package declares its defaults on .fa-wysiwyg itself, so :root alone only
+// reaches the panels portaled to <body>: `:root .fa-wysiwyg` outranks them.
+:root,
+:root .fa-wysiwyg {
+  // Same values the stored content was saved with: changing them changes how it looks
+  --fa-wysiwyg-mention-background: var(--color-primary-25);
+  --fa-wysiwyg-mention-text: var(--color-primary);
+
+  // Same as the other form inputs
+  --fa-wysiwyg-border: rgb(196, 196, 196);
+  --fa-wysiwyg-bg: var(--color-light);
+  --fa-wysiwyg-focus-ring: none;
+  // --radius is in em and the editor's font-size is 10px, so resolve it at 14px
+  --fa-wysiwyg-radius: calc(var(--font-size) * 0.25);
+
+  --fa-wysiwyg-toolbar-bg: var(--color-light-shade);
+  --fa-wysiwyg-text: var(--color-dark-shade);
+  --fa-wysiwyg-btn-hover-bg: rgba(0, 0, 0, 0.06);
+  --fa-wysiwyg-btn-on-bg: var(--color-primary-25);
+  --fa-wysiwyg-btn-on-text: var(--color-primary-shade);
+  --fa-wysiwyg-shadow: var(--shadow);
+  --fa-wysiwyg-scrollbar: var(--color-medium);
+}
+
+// Colors the package hardcodes instead of reading a variable
+.fa-wysiwyg-panel__item:hover,
+.fa-wysiwyg-color-grid__remove:hover,
+.fa-wysiwyg-color-grid__more:hover {
+  background: var(--fa-wysiwyg-btn-hover-bg);
+}
+
+.fa-wysiwyg-panel__item.fa-wysiwyg-panel__item--on,
+.fa-wysiwyg-mentions__item:hover,
+.fa-wysiwyg-mentions__item.fa-wysiwyg-mentions__item--on {
+  background: var(--fa-wysiwyg-btn-on-bg);
+  color: var(--fa-wysiwyg-btn-on-text);
+}
+
+.fa-wysiwyg-color-grid__swatch.fa-wysiwyg-color-grid__swatch--on {
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.fa-wysiwyg-table-grid__cell.fa-wysiwyg-table-grid__cell--on {
+  background: var(--color-primary-25);
+  border-color: var(--color-primary);
+}
+
+.fa-wysiwyg-color-picker__input:focus {
+  border-color: var(--color-primary);
+}
+
+.fa-wysiwyg-link__input {
+  border-color: var(--fa-wysiwyg-border);
+}
+
+// Balloon arrow: the border triangle and the fill triangle on top of it
+.fa-wysiwyg-balloon.fa-wysiwyg-balloon--south {
+  &::before {
+    border-bottom-color: var(--fa-wysiwyg-border);
+  }
+  &::after {
+    border-bottom-color: var(--fa-wysiwyg-bg);
+  }
+}
+
+.fa-wysiwyg-balloon.fa-wysiwyg-balloon--north {
+  &::before {
+    border-top-color: var(--fa-wysiwyg-border);
+  }
+  &::after {
+    border-top-color: var(--fa-wysiwyg-bg);
+  }
+}

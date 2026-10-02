@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@farena/fa-modal-react": "^0.0.0",
+    "@farena/fa-wysiwyg-react": "^1.0.0",
     "@monaco-editor/react": "^4.7.0",
     "@react-router/node": "^8.4.0",
     "@react-router/serve": "^8.4.0",
