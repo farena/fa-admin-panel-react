@@ -24,6 +24,7 @@ import TabsPlayground from "./_TabsPlayground";
 import FormHtmlPlayground from "./_FormHtmlPlayground";
 import AccordionPlayground from "./_AccordionPlayground";
 import InfiniteScrollPlayground from "./_InfiniteScrollPlayground";
+import SimplePagerPlayground from "./_SimplePagerPlayground";
 
 export default function Playground() {
   return (
@@ -59,6 +60,7 @@ export default function Playground() {
       <FormHtmlPlayground />
       <AccordionPlayground />
       <InfiniteScrollPlayground />
+      <SimplePagerPlayground />
     </div>
   );
 }
