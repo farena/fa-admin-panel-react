@@ -80,6 +80,8 @@ a {
 .dashboard-layout {
   height: 100vh;
   display: flex;
+  // Only .content scrolls; nothing may scroll the page itself
+  overflow: hidden;
 
   .sidebar {
     width: var(--sidebar-closed-width);
@@ -243,6 +245,8 @@ a {
         align-items: stretch;
 
         li {
+          // Anchors the button tooltips
+          position: relative;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -254,14 +258,17 @@ a {
 
     .content-wrapper {
       flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
-      overflow-y: auto;
-      overflow-x: hidden;
       position: relative;
 
+      // The only scroll container: topbar and footer stay visible
       .content {
         flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
         padding: 1.5em;
       }
 

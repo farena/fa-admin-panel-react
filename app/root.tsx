@@ -10,6 +10,7 @@ import {
 import type { Route } from "./+types/root";
 import "@farena/fa-modal-react/style.css";
 import "@farena/fa-wysiwyg-react/style.css";
+import "@farena/fa-tables-react/style.css";
 import "./assets/scss/styles.scss";
 import ToastProvider from "./components/Toast/ToastProvider";
 

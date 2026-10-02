@@ -1,0 +1,15 @@
+// FaTable (@farena/fa-tables-react) with the panel theme. Declared after its
+// stylesheet, so it also wins over its prefers-color-scheme: dark block
+:root {
+  --fa-tables-text: var(--body-text);
+  --fa-tables-accent: var(--color-medium);
+  --fa-tables-bg: var(--color-white);
+  --fa-tables-bghover: var(--color-light-shade);
+  --fa-tables-border: var(--color-white-shade);
+  --fa-tables-radius: var(--radius);
+  --fa-tables-filters-btn-bg: var(--color-medium);
+  --fa-tables-filters-btn-text: var(--color-primary-text);
+  --fa-tables-badge-bg: var(--color-white);
+  --fa-tables-badge-text: var(--color-primary);
+  --fa-tables-backdrop: rgb(255 255 255 / 60%);
+}
