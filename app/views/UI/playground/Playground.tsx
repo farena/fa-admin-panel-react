@@ -26,6 +26,7 @@ import AccordionPlayground from "./_AccordionPlayground";
 import InfiniteScrollPlayground from "./_InfiniteScrollPlayground";
 import SimplePagerPlayground from "./_SimplePagerPlayground";
 import WidgetPlayground from "./_WidgetPlayground";
+import ChartsPlayground from "./_ChartsPlayground";
 import { NavLink } from "react-router";
 
 const DEV_ROUTES = [
@@ -92,6 +93,7 @@ export default function Playground() {
         <InfiniteScrollPlayground />
         <SimplePagerPlayground />
         <WidgetPlayground />
+        <ChartsPlayground />
       </div>
     </>
   );
