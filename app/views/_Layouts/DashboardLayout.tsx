@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Outlet } from "react-router";
 import Sidebar from "~/components/Layout/Sidebar";
+import Topbar from "~/components/Layout/Topbar";
 
 export default function DashboardLayout() {
   const fullYear = useMemo(() => new Date().getFullYear(), []);
@@ -26,7 +27,7 @@ export default function DashboardLayout() {
     <div className="dashboard-layout">
       <Sidebar />
       <div className="main">
-        {/* <Topbar /> */}
+        <Topbar />
         <div className="content-wrapper">
           <div className="content">{!loading && <Outlet />}</div>
           <div className="footer">
