@@ -2,6 +2,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -29,6 +30,16 @@ const ICONS: Record<ToastType, string> = {
 const TOAST_DURATION = 5000;
 
 const ToastContext = createContext<ToastApi | null>(null);
+
+// Imperative access for non-React code (axios interceptors, etc.)
+let toastRef: ToastApi | null = null;
+
+export const toast: ToastApi = {
+  success: (m) => toastRef?.success(m),
+  error: (m) => toastRef?.error(m),
+  warning: (m) => toastRef?.warning(m),
+  info: (m) => toastRef?.info(m),
+};
 
 export function useToast(): ToastApi {
   const toast = useContext(ToastContext);
@@ -63,6 +74,13 @@ export default function ToastProvider({ children }: { children: ReactNode }) {
     }),
     [show],
   );
+
+  useEffect(() => {
+    toastRef = api;
+    return () => {
+      toastRef = null;
+    };
+  }, [api]);
 
   return (
     <ToastContext.Provider value={api}>

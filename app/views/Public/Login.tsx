@@ -1,8 +1,9 @@
 import { useEffect, useState, type SubmitEvent } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import FormText from "~/components/Form/FormText";
 import FormSwitch from "~/components/Form/FormSwitch";
 import FormButton from "~/components/Form/FormButton";
+import { logIn } from "~/store/api/auth";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "", remember: true });
@@ -19,8 +20,8 @@ export default function Login() {
 
   const signIn = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: dispatch login(form) and navigate to /dashboard
-    console.log(form);
+
+    logIn(form);
   };
 
   return (

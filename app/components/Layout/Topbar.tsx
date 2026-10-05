@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { logOut } from "~/store/api/auth";
 
 export default function Topbar() {
   const closeSidebar = (e: MouseEvent) => {
@@ -19,7 +20,6 @@ export default function Topbar() {
     sb.classList.add("sidebar-open");
   };
   const openSettings = () => {};
-  const logOut = () => {};
 
   useEffect(() => {
     document.addEventListener("click", closeSidebar);

@@ -1,14 +1,13 @@
-import { useEffect } from "react";
-import { Outlet } from "react-router";
+import { Navigate, Outlet } from "react-router";
+import { useAppSelector } from "~/store/hooks";
+import { selectIsAuthenticated } from "~/store/slices/authSlice";
 
 export default function PublicLayout() {
-  useEffect(() => {
-    // $store.dispatch("setCredentials");
-    // const isLoggedIn = $store.getters.isLoggedIn;
-    // if (isLoggedIn) {
-    //   $router.push("/dashboard");
-    // }
-  }, []);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   return (
     <div className="d-flex align-items-center justify-content-center h-100">
@@ -18,7 +17,9 @@ export default function PublicLayout() {
           <h3 className="m-0">QUARTZ</h3>
           <small>Admin Panel</small>
         </div>
-        <div className="card-body px-4 pb-4"><Outlet /></div>
+        <div className="card-body px-4 pb-4">
+          <Outlet />
+        </div>
       </div>
     </div>
   );

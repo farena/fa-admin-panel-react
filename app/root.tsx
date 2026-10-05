@@ -8,11 +8,15 @@ import {
 } from "react-router";
 
 import type { Route } from "./+types/root";
+import { Provider } from "react-redux";
+import { store } from "./store";
+
 import "@farena/fa-modal-react/style.css";
 import "@farena/fa-wysiwyg-react/style.css";
 import "@farena/fa-tables-react/style.css";
 import "./assets/scss/styles.scss";
 import ToastProvider from "./components/Toast/ToastProvider";
+import { ApiProvider } from "@reduxjs/toolkit/query/react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: `${import.meta.env.BASE_URL}favicon.ico` },
@@ -53,7 +57,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <ToastProvider>
-      <Outlet />
+      <Provider store={store}>
+        <Outlet />
+      </Provider>
     </ToastProvider>
   );
 }

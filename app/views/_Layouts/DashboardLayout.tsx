@@ -1,27 +1,24 @@
-import { useEffect, useMemo, useState } from "react";
-import { Outlet } from "react-router";
+import { useEffect, useState } from "react";
+import { Navigate, Outlet } from "react-router";
 import Sidebar from "~/components/Layout/Sidebar";
 import Topbar from "~/components/Layout/Topbar";
+import { useAppSelector } from "~/store/hooks";
+import { selectIsAuthenticated } from "~/store/slices/authSlice";
 
 export default function DashboardLayout() {
-  const fullYear = useMemo(() => new Date().getFullYear(), []);
+  const fullYear = new Date().getFullYear();
   const [loading, setLoading] = useState(true);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   useEffect(() => {
-    // TODO complete authentication
-    // this.$store.dispatch('setCredentials')
-    // const isLoggedIn = this.$store.getters.isLoggedIn
-
-    // if (!isLoggedIn) {
-    //   this.$router.push('/login')
-    // } else {
-    //   this.loading = false
-    //   // this.$store.dispatch("getUnreadNotifications");
-    // }
     setTimeout(() => {
       setLoading(false);
-    }, 150);
+    }, 100);
   }, []);
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="dashboard-layout">
