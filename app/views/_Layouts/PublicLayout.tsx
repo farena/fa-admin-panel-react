@@ -1,9 +1,16 @@
 import { Navigate, Outlet } from "react-router";
 import { useAppSelector } from "~/store/hooks";
-import { selectIsAuthenticated } from "~/store/slices/authSlice";
+import {
+  selectIsAuthenticated,
+  selectSessionChecked,
+} from "~/store/slices/authSlice";
 
 export default function PublicLayout() {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const sessionChecked = useAppSelector(selectSessionChecked);
+
+  // Wait for the session restore before deciding to redirect
+  if (!sessionChecked) return null;
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;

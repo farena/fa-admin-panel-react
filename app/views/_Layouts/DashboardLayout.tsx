@@ -3,18 +3,25 @@ import { Navigate, Outlet } from "react-router";
 import Sidebar from "~/components/Layout/Sidebar";
 import Topbar from "~/components/Layout/Topbar";
 import { useAppSelector } from "~/store/hooks";
-import { selectIsAuthenticated } from "~/store/slices/authSlice";
+import {
+  selectIsAuthenticated,
+  selectSessionChecked,
+} from "~/store/slices/authSlice";
 
 export default function DashboardLayout() {
   const fullYear = new Date().getFullYear();
   const [loading, setLoading] = useState(true);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const sessionChecked = useAppSelector(selectSessionChecked);
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
     }, 100);
   }, []);
+
+  // Wait for the session restore before deciding to redirect
+  if (!sessionChecked) return null;
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;

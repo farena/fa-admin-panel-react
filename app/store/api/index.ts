@@ -2,14 +2,46 @@ import axios, {
   type AxiosError,
   type AxiosInstance,
   type AxiosRequestConfig,
+  type InternalAxiosRequestConfig,
 } from "axios";
 import { store } from "..";
-import { clearSession, selectToken } from "../slices/authSlice";
+import { clearSession, selectToken, setCredentials } from "../slices/authSlice";
 import { toast } from "~/components/Toast/ToastProvider";
+import type { Credentials } from "./auth";
 
 const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  // Send the httpOnly refresh token cookie set by the backend
+  withCredentials: true,
 });
+
+// Endpoints that must not trigger a token refresh when they answer 401
+const AUTH_ENDPOINTS = ["login", "logout", "refresh_token"];
+
+// Shared between concurrent 401s so the refresh token is only used once
+let refreshing: Promise<boolean> | null = null;
+
+// Asks the backend for a new access token using the refresh token cookie.
+// Resolves false (and clears the session) if there is no valid cookie.
+export function refreshSession(): Promise<boolean> {
+  if (refreshing) return refreshing;
+
+  refreshing = client
+    .post("refresh_token")
+    .then((data) => {
+      store.dispatch(setCredentials(data as unknown as Credentials));
+      return true;
+    })
+    .catch(() => {
+      store.dispatch(clearSession());
+      return false;
+    })
+    .finally(() => {
+      refreshing = null;
+    });
+
+  return refreshing;
+}
 
 // Attach the current session token to every request, unless the caller
 // already set its own Authorization header
@@ -38,11 +70,26 @@ client.interceptors.response.use(
       return Promise.reject(e);
     }
 
-    // Logout if not authorized or the session expired
+    // Access token expired: refresh it once and retry the original request
+    const config = e.config as RetryableConfig | undefined;
+    const expired = status === 401 || res?.message === "Token has expired";
     if (
-      (status && [401, 403].includes(status)) ||
-      res?.message === "Token has expired"
+      expired &&
+      config &&
+      !config._retry &&
+      !AUTH_ENDPOINTS.includes(config.url ?? "")
     ) {
+      config._retry = true;
+      return refreshSession().then((ok) => {
+        if (!ok) return Promise.reject(e);
+        // Let the request interceptor attach the new token
+        delete config.headers.Authorization;
+        return client.request(config);
+      });
+    }
+
+    // Logout if not authorized or the session could not be refreshed
+    if ((status && [401, 403].includes(status)) || expired) {
       store.dispatch(clearSession());
       return Promise.reject(e);
     }
@@ -68,6 +115,10 @@ client.interceptors.response.use(
     return Promise.reject(e);
   },
 );
+
+interface RetryableConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+}
 
 interface ApiErrorBody {
   code?: number;

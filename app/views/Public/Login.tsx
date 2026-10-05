@@ -5,23 +5,32 @@ import FormSwitch from "~/components/Form/FormSwitch";
 import FormButton from "~/components/Form/FormButton";
 import { logIn } from "~/store/api/auth";
 
+const REMEMBERED_EMAIL_KEY = "remembered_email";
+
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "", remember: true });
 
   useEffect(() => {
-    const defaultEmail = localStorage.getItem("default_email");
-    const defaultPw = localStorage.getItem("default_pw");
-    setForm((f) => ({
-      ...f,
-      email: defaultEmail ?? f.email,
-      password: defaultPw ?? f.password,
-    }));
+    // Only the email is remembered, the password is left to the browser's
+    // password manager
+    const rememberedEmail = localStorage.getItem(REMEMBERED_EMAIL_KEY);
+    if (rememberedEmail) setForm((f) => ({ ...f, email: rememberedEmail }));
   }, []);
 
   const signIn = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    logIn(form);
+    logIn(form)
+      .then(() => {
+        // Only remember emails that were able to log in
+        if (form.remember) {
+          localStorage.setItem(REMEMBERED_EMAIL_KEY, form.email);
+        } else {
+          localStorage.removeItem(REMEMBERED_EMAIL_KEY);
+        }
+      })
+      // Errors are already notified by the api client
+      .catch(() => {});
   };
 
   return (
@@ -29,6 +38,8 @@ export default function Login() {
       <FormText
         label="Email"
         icon="fa-solid fa-envelope"
+        name="email"
+        autoComplete="username"
         value={form.email}
         onChange={(email) => setForm({ ...form, email })}
       />
@@ -36,6 +47,8 @@ export default function Login() {
         label="Password"
         password
         icon="fa-solid fa-fingerprint"
+        name="password"
+        autoComplete="current-password"
         value={form.password}
         onChange={(password) => setForm({ ...form, password })}
       />

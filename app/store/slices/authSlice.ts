@@ -5,11 +5,15 @@ import type { Credentials, User } from "../api/auth";
 interface AuthState {
   user: User | null;
   token: string | null;
+  // False until the app has tried to restore a previous session from the
+  // refresh token cookie, so layouts don't redirect before knowing
+  sessionChecked: boolean;
 }
 
 const initialState: AuthState = {
   user: null,
   token: null,
+  sessionChecked: false,
 };
 
 export const authSlice = createSlice({
@@ -24,16 +28,25 @@ export const authSlice = createSlice({
       state.user = null;
       state.token = null;
     },
+    markSessionChecked(state) {
+      state.sessionChecked = true;
+    },
   },
   selectors: {
     selectUser: (state) => state.user,
     selectToken: (state) => state.token,
     selectIsAuthenticated: (state) => !!state.token,
+    selectSessionChecked: (state) => state.sessionChecked,
   },
 });
 
-export const { setCredentials, clearSession } = authSlice.actions;
-export const { selectUser, selectToken, selectIsAuthenticated } =
-  authSlice.selectors;
+export const { setCredentials, clearSession, markSessionChecked } =
+  authSlice.actions;
+export const {
+  selectUser,
+  selectToken,
+  selectIsAuthenticated,
+  selectSessionChecked,
+} = authSlice.selectors;
 
 export default authSlice.reducer;

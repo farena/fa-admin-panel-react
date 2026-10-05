@@ -1,6 +1,10 @@
-import apiClient from ".";
+import apiClient, { refreshSession } from ".";
 import { store } from "..";
-import { clearSession, setCredentials } from "../slices/authSlice";
+import {
+  clearSession,
+  markSessionChecked,
+  setCredentials,
+} from "../slices/authSlice";
 
 export interface User {
   user_id: number;
@@ -14,7 +18,15 @@ export interface Credentials {
   token: string;
 }
 
-export function logIn(form: { email: string; password: string }) {
+export interface LoginForm {
+  email: string;
+  password: string;
+  // The backend uses it to decide if the refresh token cookie is persistent
+  // (e.g. 30 days) or a session cookie removed when the browser closes
+  remember: boolean;
+}
+
+export function logIn(form: LoginForm): Promise<void> {
   // Mock authentication for demo purposes
   if (import.meta.env.VITE_MOCK_AUTH) {
     store.dispatch(
@@ -28,20 +40,38 @@ export function logIn(form: { email: string; password: string }) {
         token: "jwt_token_123",
       }),
     );
-    return;
+    return Promise.resolve();
   }
 
-  apiClient.post<Credentials>("login", form).then((data) => {
+  return apiClient.post<Credentials>("login", form).then((data) => {
     store.dispatch(setCredentials(data));
   });
 }
 
 export function logOut() {
-  store.dispatch(clearSession());
+  if (import.meta.env.VITE_MOCK_AUTH) {
+    store.dispatch(clearSession());
+    return;
+  }
+
+  // The refresh token cookie is httpOnly, only the backend can remove it
+  apiClient
+    .post("logout")
+    .catch(() => {})
+    .finally(() => {
+      store.dispatch(clearSession());
+    });
 }
 
-export function refreshToken(token: string) {
-  apiClient.post<Credentials>("refresh_token", { token }).then((data) => {
-    store.dispatch(setCredentials(data));
+// Called once on app start: restores the session from the refresh token
+// cookie, if the user logged in before with "Remember me"
+export function restoreSession() {
+  if (import.meta.env.VITE_MOCK_AUTH) {
+    store.dispatch(markSessionChecked());
+    return;
+  }
+
+  refreshSession().finally(() => {
+    store.dispatch(markSessionChecked());
   });
 }
