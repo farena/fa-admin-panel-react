@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-import { logOut } from "~/store/api/auth";
+import { useLogoutMutation } from "~/store/api/auth";
 
 export default function Topbar() {
+  const [logOut] = useLogoutMutation();
+
   const closeSidebar = (e: MouseEvent) => {
     const sb = document.querySelector(".sidebar");
     if (!sb) return;
@@ -43,7 +45,7 @@ export default function Topbar() {
           <i className="fa-solid fa-user"></i>
           <div className="tooltip bottom-left">Profile</div>
         </li>
-        <li onClick={logOut}>
+        <li onClick={() => logOut()}>
           <i className="fa-solid fa-power-off"></i>
           <div className="tooltip bottom-left">Logout</div>
         </li>

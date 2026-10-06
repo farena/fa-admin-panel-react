@@ -11,14 +11,13 @@ import {
 import type { Route } from "./+types/root";
 import { Provider } from "react-redux";
 import { store } from "./store";
-import { restoreSession } from "./store/api/auth";
+import { authApi } from "./store/api/auth";
 
 import "@farena/fa-modal-react/style.css";
 import "@farena/fa-wysiwyg-react/style.css";
 import "@farena/fa-tables-react/style.css";
 import "./assets/scss/styles.scss";
 import ToastProvider from "./components/Toast/ToastProvider";
-import { ApiProvider } from "@reduxjs/toolkit/query/react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: `${import.meta.env.BASE_URL}favicon.ico` },
@@ -58,8 +57,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   useEffect(() => {
-    restoreSession();
-  }, []);
+    store.dispatch(authApi.endpoints.restoreSession.initiate());
+    // HMR can recreate the store (editing any module it imports), so the
+    // session has to be restored again on the new one
+  }, [store]);
 
   return (
     <ToastProvider>

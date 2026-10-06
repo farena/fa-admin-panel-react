@@ -1,19 +1,49 @@
-import axios, {
-  type AxiosError,
-  type AxiosInstance,
-  type AxiosRequestConfig,
-  type InternalAxiosRequestConfig,
-} from "axios";
-import { store } from "..";
-import { clearSession, selectToken, setCredentials } from "../slices/authSlice";
+import {
+  createApi,
+  fetchBaseQuery,
+  type BaseQueryApi,
+  type BaseQueryFn,
+  type FetchArgs,
+  type FetchBaseQueryError,
+} from "@reduxjs/toolkit/query/react";
+import type { RootState } from "..";
+import { clearSession, setCredentials } from "../slices/authSlice";
 import { toast } from "~/components/Toast/ToastProvider";
 import type { Credentials } from "./auth";
+import {
+  loadCredentials,
+  tokenSecondsLeft,
+} from "../storage/credentialsStorage";
 
-const client = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+const rawBaseQuery = fetchBaseQuery({
+  baseUrl: import.meta.env.VITE_API_URL,
   // Send the httpOnly refresh token cookie set by the backend
-  withCredentials: true,
+  credentials: "include",
+  // Attach the current session token to every request, unless the caller
+  // already set its own Authorization header
+  prepareHeaders: (headers, { getState }) => {
+    const token = (getState() as RootState).auth.token;
+    if (token && !headers.has("Authorization")) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+    return headers;
+  },
 });
+
+// The backend wraps every payload in an ApiResponse envelope
+// ({ code, data, message, success }), so strip it here once and every
+// endpoint receives directly the `data` field.
+const envelopeBaseQuery: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  const result = await rawBaseQuery(args, api, extraOptions);
+  if (result.data !== undefined) {
+    return { ...result, data: (result.data as ApiResponse | null)?.data };
+  }
+  return result;
+};
 
 // Endpoints that must not trigger a token refresh when they answer 401
 const AUTH_ENDPOINTS = ["login", "logout", "refresh_token"];
@@ -21,20 +51,39 @@ const AUTH_ENDPOINTS = ["login", "logout", "refresh_token"];
 // Shared between concurrent 401s so the refresh token is only used once
 let refreshing: Promise<boolean> | null = null;
 
-// Asks the backend for a new access token using the refresh token cookie.
-// Resolves false (and clears the session) if there is no valid cookie.
-export function refreshSession(): Promise<boolean> {
+// A stored access token is only reused if it lives at least this long
+const MIN_TOKEN_SECONDS_LEFT = 10;
+
+// Reuses the access token stored in localStorage while it still has time
+// left, otherwise asks the backend for a new one using the refresh token
+// cookie. Resolves false (and clears the session) if there is no valid cookie.
+export function refreshSession(api: BaseQueryApi): Promise<boolean> {
   if (refreshing) return refreshing;
 
-  refreshing = client
-    .post("refresh_token")
-    .then((data) => {
-      store.dispatch(setCredentials(data as unknown as Credentials));
+  // The stored token is skipped if it's the one in use, since the backend
+  // has just rejected it (e.g. the client clock is behind the server one)
+  const stored = loadCredentials();
+  const current = (api.getState() as RootState).auth.token;
+
+  if (
+    stored &&
+    stored.token !== current &&
+    tokenSecondsLeft(stored.token) >= MIN_TOKEN_SECONDS_LEFT
+  ) {
+    api.dispatch(setCredentials(stored));
+    return Promise.resolve(true);
+  }
+
+  refreshing = Promise.resolve(
+    envelopeBaseQuery({ url: "refresh_token", method: "POST" }, api, {}),
+  )
+    .then((result) => {
+      if (result.error) {
+        api.dispatch(clearSession());
+        return false;
+      }
+      api.dispatch(setCredentials(result.data as Credentials));
       return true;
-    })
-    .catch(() => {
-      store.dispatch(clearSession());
-      return false;
     })
     .finally(() => {
       refreshing = null;
@@ -43,82 +92,93 @@ export function refreshSession(): Promise<boolean> {
   return refreshing;
 }
 
-// Attach the current session token to every request, unless the caller
-// already set its own Authorization header
-client.interceptors.request.use((config) => {
-  const token = selectToken(store.getState());
-  if (token && !config.headers.Authorization) {
-    config.headers.Authorization = `Bearer ${token}`;
+const baseQuery: BaseQueryFn<
+  string | FetchArgs,
+  unknown,
+  FetchBaseQueryError
+> = async (args, api, extraOptions) => {
+  let result = await envelopeBaseQuery(args, api, extraOptions);
+  if (!result.error) return result;
+
+  const url = typeof args === "string" ? args : args.url;
+  let res = result.error.data as ApiErrorBody | undefined;
+  let status = httpStatus(result.error) ?? res?.code;
+  let expired = status === 401 || res?.message === "Token has expired";
+
+  // Access token expired: refresh it once and retry the original request.
+  // The retry picks the new token up from the store in prepareHeaders.
+  if (expired && !AUTH_ENDPOINTS.includes(url)) {
+    if (!(await refreshSession(api))) return result;
+
+    result = await envelopeBaseQuery(args, api, extraOptions);
+    if (!result.error) return result;
+
+    res = result.error.data as ApiErrorBody | undefined;
+    status = httpStatus(result.error) ?? res?.code;
+    expired = status === 401 || res?.message === "Token has expired";
   }
-  return config;
-});
 
-client.interceptors.response.use(
-  // The backend wraps every payload in an ApiResponse envelope
-  // ({ code, data, message, success }), so unwrap it here once and every
-  // request resolves directly with the `data` field.
-  (response) => response.data?.data,
-  // Error handling. Always rejects with the original error so callers can
-  // still react to it after the user has been notified.
-  (e: AxiosError<ApiErrorBody>) => {
-    const res = e.response?.data;
-    const status = e.response?.status ?? res?.code;
+  notifyError(result.error, res, status, expired, api);
+  return result;
+};
 
-    // No response at all: network failure, timeout, CORS...
-    if (!e.response) {
-      toast.error("Network error, check your connection and try again");
-      return Promise.reject(e);
-    }
+// Error handling. The error is still returned to the caller so it can react
+// to it after the user has been notified.
+function notifyError(
+  error: FetchBaseQueryError,
+  res: ApiErrorBody | undefined,
+  status: number | undefined,
+  expired: boolean,
+  api: BaseQueryApi,
+) {
+  // No response at all: network failure, timeout, CORS...
+  if (error.status === "FETCH_ERROR" || error.status === "TIMEOUT_ERROR") {
+    toast.error("Network error, check your connection and try again");
+    return;
+  }
 
-    // Access token expired: refresh it once and retry the original request
-    const config = e.config as RetryableConfig | undefined;
-    const expired = status === 401 || res?.message === "Token has expired";
-    if (
-      expired &&
-      config &&
-      !config._retry &&
-      !AUTH_ENDPOINTS.includes(config.url ?? "")
-    ) {
-      config._retry = true;
-      return refreshSession().then((ok) => {
-        if (!ok) return Promise.reject(e);
-        // Let the request interceptor attach the new token
-        delete config.headers.Authorization;
-        return client.request(config);
-      });
-    }
+  // Logout if not authorized or the session could not be refreshed
+  if ((status && [401, 403].includes(status)) || expired) {
+    api.dispatch(clearSession());
 
-    // Logout if not authorized or the session could not be refreshed
-    if ((status && [401, 403].includes(status)) || expired) {
-      store.dispatch(clearSession());
-      return Promise.reject(e);
-    }
+    if (!AUTH_ENDPOINTS.includes(api.endpoint)) return;
+  }
 
-    // Show error
-    if (res?.message) {
-      toast.error(res.message);
-      return Promise.reject(e);
-    }
+  // Show error
+  if (res?.message) {
+    toast.error(res.message);
+    return;
+  }
 
-    // Show validation errors
-    if (res?.errors) {
-      Object.values(res.errors).forEach((x) => {
-        if (!Array.isArray(x)) return;
-        x.forEach((z) => toast.error(z));
-      });
-      return Promise.reject(e);
-    }
+  // Show validation errors
+  if (res?.errors) {
+    Object.values(res.errors).forEach((x) => {
+      if (!Array.isArray(x)) return;
+      x.forEach((z) => toast.error(z));
+    });
+    return;
+  }
 
-    toast.error("Unexpected error, try again in a few minutes");
-    console.error(e);
-
-    return Promise.reject(e);
-  },
-);
-
-interface RetryableConfig extends InternalAxiosRequestConfig {
-  _retry?: boolean;
+  toast.error("Unexpected error, try again in a few minutes");
+  console.error(error);
 }
+
+// fetchBaseQuery uses string statuses for non-HTTP failures, but keeps the
+// real HTTP status in `originalStatus` when the body could not be parsed
+function httpStatus(error: FetchBaseQueryError): number | undefined {
+  if (typeof error.status === "number") return error.status;
+  if (error.status === "PARSING_ERROR") return error.originalStatus;
+  return undefined;
+}
+
+// Every feature adds its own endpoints with `api.injectEndpoints()`, so
+// they all share this cache, middleware and error handling
+export const api = createApi({
+  reducerPath: "api",
+  baseQuery,
+  tagTypes: [],
+  endpoints: () => ({}),
+});
 
 interface ApiErrorBody {
   code?: number;
@@ -132,23 +192,3 @@ export interface ApiResponse<T = unknown> {
   message: string;
   success: boolean;
 }
-
-type UnwrappedMethods = "request" | "get" | "delete" | "post" | "put" | "patch";
-
-// Same axios instance, retyped to match what the response interceptor
-// actually resolves with: `api.post<User>("users", body)` is `Promise<User>`.
-// Type-only, there is no runtime wrapper.
-export type ApiClient = Omit<AxiosInstance, UnwrappedMethods> & {
-  request<T>(config: AxiosRequestConfig): Promise<T>;
-  get<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
-  delete<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
-  post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
-  put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
-  patch<T>(
-    url: string,
-    data?: unknown,
-    config?: AxiosRequestConfig,
-  ): Promise<T>;
-};
-
-export default client as unknown as ApiClient;

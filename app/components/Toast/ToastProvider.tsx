@@ -31,7 +31,7 @@ const TOAST_DURATION = 5000;
 
 const ToastContext = createContext<ToastApi | null>(null);
 
-// Imperative access for non-React code (axios interceptors, etc.)
+// Imperative access for non-React code (RTK Query base query, etc.)
 let toastRef: ToastApi | null = null;
 
 export const toast: ToastApi = {

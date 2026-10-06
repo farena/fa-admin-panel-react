@@ -3,11 +3,12 @@ import { Link, useNavigate } from "react-router";
 import FormText from "~/components/Form/FormText";
 import FormSwitch from "~/components/Form/FormSwitch";
 import FormButton from "~/components/Form/FormButton";
-import { logIn } from "~/store/api/auth";
+import { useLoginMutation } from "~/store/api/auth";
 
 const REMEMBERED_EMAIL_KEY = "remembered_email";
 
 export default function Login() {
+  const [logIn, { isLoading }] = useLoginMutation();
   const [form, setForm] = useState({ email: "", password: "", remember: true });
 
   useEffect(() => {
@@ -21,6 +22,7 @@ export default function Login() {
     e.preventDefault();
 
     logIn(form)
+      .unwrap()
       .then(() => {
         // Only remember emails that were able to log in
         if (form.remember) {
@@ -29,7 +31,7 @@ export default function Login() {
           localStorage.removeItem(REMEMBERED_EMAIL_KEY);
         }
       })
-      // Errors are already notified by the api client
+      // Errors are already notified by the base query
       .catch(() => {});
   };
 
@@ -59,7 +61,13 @@ export default function Login() {
         onChange={(remember) => setForm({ ...form, remember })}
       />
 
-      <FormButton type="submit" theme="primary" block className="mt-4">
+      <FormButton
+        type="submit"
+        theme="primary"
+        block
+        className="mt-4"
+        disabled={isLoading}
+      >
         Log In
       </FormButton>
 
